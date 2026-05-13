@@ -118,21 +118,35 @@ const ZH_SITE = (() => {
     return base;
   }
 
+  let cache = clone(defaults);
+
   function load() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? merge(clone(defaults), JSON.parse(saved)) : clone(defaults);
-    } catch {
-      return clone(defaults);
-    }
+    return clone(cache);
   }
 
-  function save(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  async function fetchContent() {
+    const response = await fetch("/api/content", { cache: "no-store" });
+    if (!response.ok) throw new Error("Failed to load site content");
+    const remote = await response.json();
+    cache = merge(clone(defaults), remote);
+    return load();
   }
 
-  function reset() {
-    localStorage.removeItem(STORAGE_KEY);
+  async function save(data) {
+    cache = merge(clone(defaults), data);
+    const response = await fetch("/api/content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cache)
+    });
+    if (!response.ok) throw new Error("Failed to save site content");
+    const remote = await response.json();
+    cache = merge(clone(defaults), remote);
+    return load();
+  }
+
+  async function reset() {
+    return save(clone(defaults));
   }
 
   function fileToDataUrl(file) {
@@ -163,5 +177,5 @@ const ZH_SITE = (() => {
     return icons[name] || icons.book;
   }
 
-  return { LOGIN_CODE_PRIMARY, LOGIN_CODE_SECONDARY, defaults, load, save, reset, fileToDataUrl, escapeHtml, icon, placeholder };
+  return { LOGIN_CODE_PRIMARY, LOGIN_CODE_SECONDARY, defaults, load, fetchContent, save, reset, fileToDataUrl, escapeHtml, icon, placeholder };
 })();

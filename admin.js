@@ -202,10 +202,15 @@ function getOriginal(type, index) {
   return (data[type] || [])[index] || {};
 }
 
-function save(message = "已保存") {
-  ZH_SITE.save(data);
-  applyTheme();
-  showState(message);
+async function save(message = "已保存") {
+  try {
+    data = await ZH_SITE.save(data);
+    applyTheme();
+    showState(message);
+  } catch (error) {
+    console.error("Failed to save site content:", error);
+    showState("保存失败，请检查服务端");
+  }
 }
 
 function showState(message) {
@@ -274,7 +279,7 @@ function bind() {
       data.logo = await ZH_SITE.fileToDataUrl(form.elements.logo.files[0]);
       form.elements.logo.value = "";
     }
-    save();
+    await save();
   });
 
   $("[data-panel='home']").addEventListener("submit", async (event) => {
@@ -289,14 +294,14 @@ function bind() {
       data.heroImage = await ZH_SITE.fileToDataUrl(form.elements.heroImage.files[0]);
       form.elements.heroImage.value = "";
     }
-    save();
+    await save();
     renderEditor("features");
   });
 
   $("[data-panel='announcements']").addEventListener("submit", async (event) => {
     event.preventDefault();
     data.announcements = await collect("announcements");
-    save();
+    await save();
     renderEditor("announcements");
   });
 
@@ -312,14 +317,14 @@ function bind() {
       data.about.image = await ZH_SITE.fileToDataUrl(form.elements.image.files[0]);
       form.elements.image.value = "";
     }
-    save();
+    await save();
   });
 
   $("[data-panel='members']").addEventListener("submit", async (event) => {
     event.preventDefault();
     data.memberProfiles = await collect("memberProfiles");
     data.clubMoments = await collect("clubMoments");
-    save();
+    await save();
     renderEditor("memberProfiles");
     renderEditor("clubMoments");
   });
@@ -327,24 +332,24 @@ function bind() {
   $("[data-panel='projects']").addEventListener("submit", async (event) => {
     event.preventDefault();
     data.projects = await collect("projects");
-    save();
+    await save();
     renderEditor("projects");
   });
 
   $("[data-panel='activities']").addEventListener("submit", async (event) => {
     event.preventDefault();
     data.activities = await collect("activities");
-    save();
+    await save();
     renderEditor("activities");
   });
 
-  $("[data-panel='join']").addEventListener("submit", (event) => {
+  $("[data-panel='join']").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     Object.keys(data.join).forEach((key) => {
       if (form.elements[key]) data.join[key] = form.elements[key].value.trim();
     });
-    save();
+    await save();
   });
 
   document.addEventListener("click", (event) => {
@@ -370,10 +375,9 @@ function bind() {
     URL.revokeObjectURL(url);
   });
 
-  $("[data-reset]").addEventListener("click", () => {
+  $("[data-reset]").addEventListener("click", async () => {
     if (!confirm("确定恢复默认内容吗？当前浏览器保存的修改会被清除。")) return;
-    ZH_SITE.reset();
-    data = ZH_SITE.load();
+    data = await ZH_SITE.reset();
     applyTheme();
     fillForms();
     renderEditors();
@@ -387,3 +391,15 @@ applyTheme();
 fillForms();
 renderEditors();
 bind();
+
+ZH_SITE.fetchContent()
+  .then((content) => {
+    data = content;
+    applyTheme();
+    fillForms();
+    renderEditors();
+  })
+  .catch((error) => {
+    console.error("Failed to refresh site content:", error);
+    showState("读取数据库失败，当前显示默认内容");
+  });

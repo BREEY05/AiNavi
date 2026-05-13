@@ -1,0 +1,17 @@
+{
+  "name": "zhihang-ai-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dynamic Zhihang AI association website backed by SQLite.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.1",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

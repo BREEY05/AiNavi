@@ -325,3 +325,12 @@ function renderAll() {
 ensureSharedModals();
 renderAll();
 bindEvents();
+
+ZH_SITE.fetchContent()
+  .then((content) => {
+    siteContent = content;
+    renderAll();
+  })
+  .catch((error) => {
+    console.error("Failed to refresh site content:", error);
+  });
