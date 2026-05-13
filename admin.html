@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智航AI协会 - 内容管理</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+  <header class="admin-topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo" data-admin-logo></span>
+      <span>智航AI协会管理后台</span>
+    </a>
+    <div class="admin-top-actions">
+      <button class="ghost-button" type="button" data-preview>返回首页</button>
+      <button class="danger-button" type="button" data-logout>退出登录</button>
+    </div>
+  </header>
+
+  <main class="admin-layout">
+    <aside class="admin-sidebar">
+      <button class="active" type="button" data-section="basic">基础与Logo</button>
+      <button type="button" data-section="home">首页内容</button>
+      <button type="button" data-section="announcements">最新公告</button>
+      <button type="button" data-section="about">关于我们</button>
+      <button type="button" data-section="members">社团风采</button>
+      <button type="button" data-section="projects">项目展示</button>
+      <button type="button" data-section="activities">近期活动</button>
+      <button type="button" data-section="join">加入我们</button>
+    </aside>
+
+    <section class="admin-workspace">
+      <div class="admin-title">
+        <div>
+          <span>CONTENT MANAGER</span>
+          <h1 data-admin-title>基础与Logo</h1>
+        </div>
+        <div class="admin-save-state" data-save-state></div>
+      </div>
+
+      <form class="manager-section active" data-panel="basic">
+        <div class="form-grid">
+          <label>协会名称<input name="siteName" type="text"></label>
+          <label>主题蓝色<input name="themeColor" type="color"></label>
+          <label class="full">上传Logo<input name="logo" type="file" accept="image/*"></label>
+        </div>
+        <div class="image-preview logo-preview" data-preview-logo></div>
+        <button class="primary-button" type="submit">保存基础设置</button>
+      </form>
+
+      <form class="manager-section" data-panel="home">
+        <div class="form-grid">
+          <label>首页标题<input name="heroTitle" type="text"></label>
+          <label>首页副标题<input name="heroSubtitle" type="text"></label>
+          <label class="full">底部标语<input name="heroLine" type="text"></label>
+          <label class="full">首页主视觉图<input name="heroImage" type="file" accept="image/*"></label>
+          <label class="full">首页社团介绍<textarea name="clubIntro" rows="5"></textarea></label>
+        </div>
+        <img class="wide-preview" data-preview-hero alt="主视觉预览">
+        <div class="editor-list compact" data-editor="features"></div>
+        <button class="primary-button" type="submit">保存首页内容</button>
+      </form>
+
+      <form class="manager-section" data-panel="announcements">
+        <div class="editor-list" data-editor="announcements"></div>
+        <button class="ghost-button" type="button" data-add="announcements">新增公告</button>
+        <button class="primary-button" type="submit">保存公告</button>
+      </form>
+
+      <form class="manager-section" data-panel="about">
+        <div class="form-grid">
+          <label>标题<input name="title" type="text"></label>
+          <label>使命标题<input name="missionTitle" type="text"></label>
+          <label class="full">副标题<textarea name="subtitle" rows="3"></textarea></label>
+          <label class="full">展示图片<input name="image" type="file" accept="image/*"></label>
+        </div>
+        <img class="wide-preview" data-preview-about alt="关于我们预览">
+        <div class="editor-list" data-editor="aboutParagraphs"></div>
+        <div class="editor-list compact" data-editor="aboutStats"></div>
+        <button class="primary-button" type="submit">保存关于我们</button>
+      </form>
+
+      <form class="manager-section" data-panel="members">
+        <p class="admin-tip">成员介绍用于展示头像、头衔/职称、获奖情况；活动风采用于展示社团成员参加活动的照片和文字。拖动卡片可排序。</p>
+        <h2 class="admin-subtitle">成员介绍</h2>
+        <div class="editor-list sortable-grid" data-editor="memberProfiles"></div>
+        <button class="ghost-button" type="button" data-add="memberProfiles">新增成员介绍</button>
+        <h2 class="admin-subtitle">活动风采</h2>
+        <div class="editor-list sortable-grid" data-editor="clubMoments"></div>
+        <button class="ghost-button" type="button" data-add="clubMoments">新增活动风采</button>
+        <button class="primary-button" type="submit">保存社团风采</button>
+      </form>
+
+      <form class="manager-section" data-panel="projects">
+        <div class="editor-list sortable-grid" data-editor="projects"></div>
+        <button class="ghost-button" type="button" data-add="projects">新增项目</button>
+        <button class="primary-button" type="submit">保存项目展示</button>
+      </form>
+
+      <form class="manager-section" data-panel="activities">
+        <div class="editor-list" data-editor="activities"></div>
+        <button class="ghost-button" type="button" data-add="activities">新增活动</button>
+        <button class="primary-button" type="submit">保存近期活动</button>
+      </form>
+
+      <form class="manager-section" data-panel="join">
+        <div class="form-grid">
+          <label>标题<input name="title" type="text"></label>
+          <label>电话<input name="phone" type="text"></label>
+          <label class="full">副标题<textarea name="subtitle" rows="3"></textarea></label>
+          <label class="full">加入说明<textarea name="intro" rows="5"></textarea></label>
+          <label>地址<input name="address" type="text"></label>
+          <label>邮箱<input name="email" type="text"></label>
+          <label>招新标题<input name="recruitTitle" type="text"></label>
+          <label class="full">招新时间<textarea name="recruitInfo" rows="4"></textarea></label>
+        </div>
+        <button class="primary-button" type="submit">保存加入我们</button>
+      </form>
+
+      <div class="admin-bottom-actions">
+        <button class="ghost-button" type="button" data-export>导出当前内容JSON</button>
+        <button class="danger-button" type="button" data-reset>恢复默认内容</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="site-data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
