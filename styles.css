@@ -839,6 +839,7 @@ body[data-page="home"] .site-shell {
   margin: 0.45rem 0 0;
   color: var(--muted);
   line-height: 1.65;
+  white-space: pre-line;
 }
 
 .moments-grid {
