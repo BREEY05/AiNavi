@@ -149,6 +149,21 @@ const ZH_SITE = (() => {
     return save(clone(defaults));
   }
 
+  async function uploadImage(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData
+    });
+    if (!response.ok) throw new Error("Failed to upload image");
+
+    const result = await response.json();
+    if (!result.url) throw new Error("Upload response missing image URL");
+    return result.url;
+  }
+
   function fileToDataUrl(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -177,5 +192,5 @@ const ZH_SITE = (() => {
     return icons[name] || icons.book;
   }
 
-  return { LOGIN_CODE_PRIMARY, LOGIN_CODE_SECONDARY, defaults, load, fetchContent, save, reset, fileToDataUrl, escapeHtml, icon, placeholder };
+  return { LOGIN_CODE_PRIMARY, LOGIN_CODE_SECONDARY, defaults, load, fetchContent, save, reset, uploadImage, fileToDataUrl, escapeHtml, icon, placeholder };
 })();

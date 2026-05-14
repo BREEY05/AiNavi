@@ -191,7 +191,7 @@ async function collect(type) {
       item[input.name] = input.value.trim();
     });
     const fileInput = $("input[type='file']", node);
-    if (fileInput && fileInput.files[0]) item.image = await ZH_SITE.fileToDataUrl(fileInput.files[0]);
+    if (fileInput && fileInput.files[0]) item.image = await ZH_SITE.uploadImage(fileInput.files[0]);
     return item;
   }));
 }
@@ -276,7 +276,7 @@ function bind() {
     data.siteName = form.elements.siteName.value.trim();
     data.themeColor = form.elements.themeColor.value || "#1768ff";
     if (form.elements.logo.files[0]) {
-      data.logo = await ZH_SITE.fileToDataUrl(form.elements.logo.files[0]);
+      data.logo = await ZH_SITE.uploadImage(form.elements.logo.files[0]);
       form.elements.logo.value = "";
     }
     await save();
@@ -291,7 +291,7 @@ function bind() {
     data.clubIntro = form.elements.clubIntro.value.trim();
     data.features = await collect("features");
     if (form.elements.heroImage.files[0]) {
-      data.heroImage = await ZH_SITE.fileToDataUrl(form.elements.heroImage.files[0]);
+      data.heroImage = await ZH_SITE.uploadImage(form.elements.heroImage.files[0]);
       form.elements.heroImage.value = "";
     }
     await save();
@@ -314,7 +314,7 @@ function bind() {
     data.about.paragraphs = (await collect("aboutParagraphs")).map((item) => item.text);
     data.about.stats = await collect("aboutStats");
     if (form.elements.image.files[0]) {
-      data.about.image = await ZH_SITE.fileToDataUrl(form.elements.image.files[0]);
+      data.about.image = await ZH_SITE.uploadImage(form.elements.image.files[0]);
       form.elements.image.value = "";
     }
     await save();

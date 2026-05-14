@@ -2,14 +2,18 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const express = require("express");
+const multer = require("multer");
 const Database = require("better-sqlite3");
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const STATIC_DIR = process.env.STATIC_DIR || __dirname;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(STATIC_DIR, "uploads");
 const DB_FILE = process.env.DB_FILE || path.join(DATA_DIR, "site-content.sqlite");
 const CONTENT_KEY = "site";
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
+const IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"]);
 
 function readDefaults() {
   const source = fs.readFileSync(path.join(__dirname, "site-data.js"), "utf8");
@@ -34,6 +38,28 @@ function merge(base, saved) {
 }
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname || "").toLowerCase();
+      const safeExt = ext && ext.length <= 8 ? ext : ".jpg";
+      const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      cb(null, `${unique}${safeExt}`);
+    }
+  }),
+  limits: { fileSize: MAX_UPLOAD_SIZE },
+  fileFilter: (req, file, cb) => {
+    if (IMAGE_MIME_TYPES.has(file.mimetype)) {
+      cb(null, true);
+      return;
+    }
+
+    cb(new Error("Only image uploads are allowed"));
+  }
+});
 
 const defaults = readDefaults();
 const db = new Database(DB_FILE);
@@ -91,6 +117,26 @@ app.post("/api/content", (req, res) => {
 
   res.json(saveContent(req.body));
 });
+
+app.post("/api/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    res.status(400).json({ error: "Image file is required" });
+    return;
+  }
+
+  res.json({ url: `/uploads/${req.file.filename}` });
+});
+
+app.use((error, req, res, next) => {
+  if (error instanceof multer.MulterError || error.message === "Only image uploads are allowed") {
+    res.status(400).json({ error: error.message });
+    return;
+  }
+
+  next(error);
+});
+
+app.use("/uploads", express.static(UPLOAD_DIR));
 
 app.use(express.static(STATIC_DIR, {
   extensions: ["html"],

@@ -1,0 +1,6 @@
+node_modules/
+data/
+uploads/
+tmp-*/
+tmp-*.log
+tmp-upload-test.png
