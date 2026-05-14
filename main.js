@@ -44,7 +44,7 @@ function highlight(value) {
 }
 
 function chartColor(index) {
-  return ["#1768ff", "#19a680", "#f18423", "#8561ec", "#14a7d8", "#e0a000"][index % 6];
+  return ["#86aefb", "#8fd6c2", "#f5bf82", "#b7a5f3", "#8ecfe5", "#ead98d"][index % 6];
 }
 
 function renderShell() {
@@ -148,23 +148,46 @@ function pieSegments(items) {
   }).join(", ");
 }
 
+function chartLabels(items) {
+  const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.value) || 0), 0) || 1;
+  let start = 0;
+  return items.map((item, index) => {
+    const value = Math.max(0, Number(item.value) || 0);
+    const percent = value / total * 100;
+    const mid = (start + percent / 2) / 100 * 360 - 90;
+    start += percent;
+
+    const rad = mid * Math.PI / 180;
+    const side = Math.cos(rad) >= 0 ? "right" : "left";
+    const labelX = 50 + Math.cos(rad) * 43;
+    const labelY = 50 + Math.sin(rad) * 36;
+    const lineX = 50 + Math.cos(rad) * 26;
+    const lineY = 50 + Math.sin(rad) * 22;
+    const width = Math.max(9, Math.abs(labelX - lineX));
+    const angle = Math.atan2(labelY - lineY, labelX - lineX) * 180 / Math.PI;
+
+    return `
+      <span class="chart-label ${side}" style="left:${labelX}%; top:${labelY}%;">
+        <i style="background:${item.color || chartColor(index)}"></i>${ZH_SITE.escapeHtml(item.label)} ${Math.round(percent)}%
+      </span>
+      <span class="chart-line" style="left:${lineX}%; top:${lineY}%; width:${width}%; transform:rotate(${angle}deg);"></span>
+    `;
+  }).join("");
+}
+
 function renderAboutCharts() {
   const root = $("[data-about-charts]");
   if (!root) return;
   const charts = (siteContent.about && siteContent.about.charts) || [];
   root.innerHTML = charts.map((chart) => {
     const items = chart.items || [];
-    const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.value) || 0), 0);
     return `
       <article class="chart-card">
         <h3>${ZH_SITE.escapeHtml(chart.title)}</h3>
-        <div class="pie-chart" style="--pie:${pieSegments(items)}"></div>
-        <div class="chart-legend">
-          ${items.map((item, index) => {
-            const value = Number(item.value) || 0;
-            const percent = total ? Math.round(value / total * 100) : 0;
-            return `<span><i style="background:${item.color || chartColor(index)}"></i>${ZH_SITE.escapeHtml(item.label)} ${percent}%</span>`;
-          }).join("")}
+        <div class="pie-scene">
+          <div class="pie-base"></div>
+          <div class="pie-chart" style="--pie:${pieSegments(items)}"></div>
+          ${chartLabels(items)}
         </div>
       </article>
     `;

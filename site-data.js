@@ -83,19 +83,19 @@ const ZH_SITE = (() => {
         {
           title: "成员专业分布图",
           items: [
-            { label: "计算机类", value: 38, color: "#1768ff" },
-            { label: "人工智能", value: 28, color: "#19a680" },
-            { label: "软件工程", value: 20, color: "#f18423" },
-            { label: "其他专业", value: 14, color: "#8561ec" }
+            { label: "计算机类", value: 38, color: "#86aefb" },
+            { label: "人工智能", value: 28, color: "#8fd6c2" },
+            { label: "软件工程", value: 20, color: "#f5bf82" },
+            { label: "其他专业", value: 14, color: "#b7a5f3" }
           ]
         },
         {
           title: "成员年级分布图",
           items: [
-            { label: "大一", value: 24, color: "#1768ff" },
-            { label: "大二", value: 36, color: "#19a680" },
-            { label: "大三", value: 28, color: "#f18423" },
-            { label: "大四", value: 12, color: "#8561ec" }
+            { label: "大一", value: 24, color: "#86aefb" },
+            { label: "大二", value: 36, color: "#8fd6c2" },
+            { label: "大三", value: 28, color: "#f5bf82" },
+            { label: "大四", value: 12, color: "#b7a5f3" }
           ]
         }
       ]

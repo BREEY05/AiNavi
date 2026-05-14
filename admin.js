@@ -278,8 +278,8 @@ function newItem(type) {
   const map = {
     announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。" },
     achievements: { title: "新的成果照片", note: "照片展示", image: ZH_SITE.placeholder("成果照片", "#1768ff") },
-    majorChart: { label: "新专业", value: 10, color: "#1768ff" },
-    gradeChart: { label: "新年级", value: 10, color: "#1768ff" },
+    majorChart: { label: "新专业", value: 10, color: "#86aefb" },
+    gradeChart: { label: "新年级", value: 10, color: "#86aefb" },
     memberProfiles: { name: "新成员", title: "自定义头衔/职称", awards: "这里填写获奖情况。", image: ZH_SITE.placeholder("成员头像", "#1768ff") },
     clubMoments: { title: "新的活动风采", text: "这里填写活动照片下方文字。", image: ZH_SITE.placeholder("活动风采", "#19a680") },
     projects: { title: "新的项目", category: "项目分类", award: "填写获得的奖项", image: ZH_SITE.placeholder("项目图片", "#0aa878"), detail: "这里填写项目介绍。" },

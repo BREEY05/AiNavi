@@ -715,8 +715,8 @@ body[data-page="home"] .site-shell {
 .chart-card {
   display: grid;
   justify-items: center;
-  gap: 1.1rem;
-  padding: 1.5rem;
+  gap: 0.8rem;
+  padding: 1.35rem 1.5rem 1.5rem;
   border: 1px solid var(--line);
   border-radius: 0.9rem;
   background: #fff;
@@ -728,50 +728,90 @@ body[data-page="home"] .site-shell {
   font-size: 1.35rem;
 }
 
+.pie-scene {
+  position: relative;
+  width: min(31rem, 88vw);
+  height: 22rem;
+}
+
+.pie-base,
 .pie-chart {
-  width: min(18rem, 70vw);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16rem;
   aspect-ratio: 1;
   border-radius: 50%;
+  transform: translate(-50%, -47%) rotateX(58deg);
+  transform-style: preserve-3d;
+}
+
+.pie-base {
+  top: calc(50% + 1.2rem);
   background: conic-gradient(var(--pie));
-  transform: rotate(-90deg);
-  clip-path: circle(0 at 50% 50%);
+  filter: saturate(0.75) brightness(0.82);
+  box-shadow: 0 1.2rem 2.4rem rgba(37, 63, 103, 0.18);
+}
+
+.pie-chart {
+  background: conic-gradient(var(--pie));
+  box-shadow:
+    inset 0 0.45rem 1.2rem rgba(255, 255, 255, 0.34),
+    0 0.75rem 1.4rem rgba(37, 63, 103, 0.12);
+  clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 50%);
 }
 
 .pie-chart.animate {
-  animation: pie-reveal 1.2s ease-out forwards;
+  animation: pie-sweep 1.35s cubic-bezier(0.22, 0.8, 0.24, 1) forwards;
 }
 
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem 1rem;
-}
-
-.chart-legend span {
+.chart-label {
+  position: absolute;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  color: #44516b;
-  font-size: 0.95rem;
+  gap: 0.38rem;
+  max-width: 8.8rem;
+  color: #52617c;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
 }
 
-.chart-legend i {
+.chart-label.left {
+  transform: translate(-100%, -50%);
+}
+
+.chart-label.right {
+  transform: translate(0, -50%);
+}
+
+.chart-label i {
   width: 0.78rem;
   height: 0.78rem;
+  flex: 0 0 auto;
   border-radius: 50%;
 }
 
-@keyframes pie-reveal {
-  from {
-    clip-path: circle(0 at 50% 50%);
-    transform: rotate(-160deg);
-  }
+.chart-line {
+  position: absolute;
+  z-index: 1;
+  height: 0;
+  border-top: 1px dashed rgba(100, 112, 138, 0.54);
+  transform-origin: left center;
+}
 
-  to {
-    clip-path: circle(72% at 50% 50%);
-    transform: rotate(-90deg);
-  }
+@keyframes pie-sweep {
+  0% { clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 50%); }
+  12.5% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 50% 50%); }
+  25% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 50%, 50% 50%); }
+  37.5% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 50%); }
+  50% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%, 50% 50%); }
+  62.5% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 50% 50%); }
+  75% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%); }
+  87.5% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 50%); }
+  100% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0); }
 }
 
 .club-style-section {
