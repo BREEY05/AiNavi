@@ -166,7 +166,7 @@ label {
 .wide-preview {
   width: min(620px, 100%);
   aspect-ratio: 16 / 8;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .editor-list {
@@ -208,7 +208,7 @@ label {
 .thumb-preview {
   width: 12rem;
   aspect-ratio: 16 / 9;
-  object-fit: contain;
+  object-fit: cover;
   background: #f8fbff;
   border-radius: 0.6rem;
   border: 1px solid var(--line);
