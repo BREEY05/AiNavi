@@ -14,20 +14,20 @@ function ensureSharedModals() {
     document.body.insertAdjacentHTML("beforeend", `
       <div class="login-modal" data-login-modal hidden>
         <form class="login-card" data-login-form>
-          <button class="close-button" type="button" data-close-login aria-label="鍏抽棴">
+          <button class="close-button" type="button" data-close-login aria-label="关闭">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
           </button>
-          <h2>鍐呴儴鐧诲綍</h2>
-          <p data-login-hint>璇疯緭鍏ュ唴閮ㄩ獙璇佺爜杩涘叆鍐呭绠＄悊銆?/p>
+          <h2>内部登录</h2>
+          <p data-login-hint>请输入内部验证码进入内容管理。</p>
           <div data-login-step="primary">
-            <label for="login-code-primary">鍐呴儴楠岃瘉鐮?/label>
-            <input id="login-code-primary" type="password" autocomplete="current-password" placeholder="璇疯緭鍏ュ唴閮ㄩ獙璇佺爜">
+            <label for="login-code-primary">内部验证码</label>
+            <input id="login-code-primary" type="password" autocomplete="current-password" placeholder="请输入内部验证码">
           </div>
           <div data-login-step="secondary" hidden>
-            <label for="login-code-secondary">绗簩閲嶇櫥褰曠爜</label>
-            <input id="login-code-secondary" type="password" autocomplete="current-password" placeholder="璇疯緭鍏ョ浜岄噸鐧诲綍鐮?>
+            <label for="login-code-secondary">第二重登录码</label>
+            <input id="login-code-secondary" type="password" autocomplete="current-password" placeholder="请输入第二重登录码">
           </div>
-          <button class="primary-button" type="submit" data-login-submit>杩涘叆鍚庡彴</button>
+          <button class="primary-button" type="submit" data-login-submit>进入后台</button>
           <span class="form-message" data-login-message></span>
         </form>
       </div>
@@ -234,7 +234,7 @@ function renderActivitiesPage() {
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <div>
         <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
-        <p class="feed-meta">${ZH_SITE.escapeHtml(item.date)} 路 ${ZH_SITE.escapeHtml(item.place)}</p>
+        <p class="feed-meta">${ZH_SITE.escapeHtml(item.date)} · ${ZH_SITE.escapeHtml(item.place)}</p>
         <p>${ZH_SITE.escapeHtml(item.detail)}</p>
       </div>
     </button>
@@ -283,7 +283,7 @@ function openList(type) {
       ${items.map((item, index) => `
         <button type="button" data-open-detail="${type}" data-index="${index}">
           <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
-          <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` 路 ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
+          <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` · ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
         </button>
       `).join("")}
     </div>
