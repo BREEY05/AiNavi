@@ -32,6 +32,18 @@ function clone(value) {
 
 function merge(base, saved) {
   Object.keys(saved || {}).forEach((key) => {
+    if (
+      base[key] &&
+      saved[key] &&
+      typeof base[key] === "object" &&
+      typeof saved[key] === "object" &&
+      !Array.isArray(base[key]) &&
+      !Array.isArray(saved[key])
+    ) {
+      base[key] = merge(base[key], saved[key]);
+      return;
+    }
+
     base[key] = saved[key];
   });
   return base;

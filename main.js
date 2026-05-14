@@ -1,7 +1,10 @@
-let siteContent = ZH_SITE.load();
+﻿let siteContent = ZH_SITE.load();
 let loginStep = "primary";
 let secretClicks = 0;
 let secretTimer = null;
+let achievementPage = 0;
+let chartsArmed = false;
+let chartsAnimated = false;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
@@ -11,20 +14,20 @@ function ensureSharedModals() {
     document.body.insertAdjacentHTML("beforeend", `
       <div class="login-modal" data-login-modal hidden>
         <form class="login-card" data-login-form>
-          <button class="close-button" type="button" data-close-login aria-label="关闭">
+          <button class="close-button" type="button" data-close-login aria-label="鍏抽棴">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
           </button>
-          <h2>内部登录</h2>
-          <p data-login-hint>请输入内部验证码进入内容管理。</p>
+          <h2>鍐呴儴鐧诲綍</h2>
+          <p data-login-hint>璇疯緭鍏ュ唴閮ㄩ獙璇佺爜杩涘叆鍐呭绠＄悊銆?/p>
           <div data-login-step="primary">
-            <label for="login-code-primary">内部验证码</label>
-            <input id="login-code-primary" type="password" autocomplete="current-password" placeholder="请输入内部验证码">
+            <label for="login-code-primary">鍐呴儴楠岃瘉鐮?/label>
+            <input id="login-code-primary" type="password" autocomplete="current-password" placeholder="璇疯緭鍏ュ唴閮ㄩ獙璇佺爜">
           </div>
           <div data-login-step="secondary" hidden>
-            <label for="login-code-secondary">第二重登录码</label>
-            <input id="login-code-secondary" type="password" autocomplete="current-password" placeholder="请输入第二重登录码">
+            <label for="login-code-secondary">绗簩閲嶇櫥褰曠爜</label>
+            <input id="login-code-secondary" type="password" autocomplete="current-password" placeholder="璇疯緭鍏ョ浜岄噸鐧诲綍鐮?>
           </div>
-          <button class="primary-button" type="submit" data-login-submit>进入后台</button>
+          <button class="primary-button" type="submit" data-login-submit>杩涘叆鍚庡彴</button>
           <span class="form-message" data-login-message></span>
         </form>
       </div>
@@ -37,7 +40,11 @@ function applyTheme() {
 }
 
 function highlight(value) {
-  return ZH_SITE.escapeHtml(value).replace(/AI/g, "<span>AI</span>").replace(/无限可能/g, "<span>无限可能</span>");
+  return ZH_SITE.escapeHtml(value).replace(/AI/g, "<span>AI</span>").replace(/鏃犻檺鍙兘/g, "<span>鏃犻檺鍙兘</span>");
+}
+
+function chartColor(index) {
+  return ["#1768ff", "#19a680", "#f18423", "#8561ec", "#14a7d8", "#e0a000"][index % 6];
 }
 
 function renderShell() {
@@ -86,15 +93,30 @@ function renderHome() {
     </button>
   `).join("");
 
-  $("[data-list='home-projects']").innerHTML = siteContent.projects.slice(0, 5).map((item) => `
-    <a class="achievement-item" href="projects.html">
+  renderAchievements();
+}
+
+function renderAchievements() {
+  if (!document.body.matches("[data-page='home']")) return;
+  const achievements = siteContent.achievements || [];
+  const pageSize = 3;
+  const maxPage = Math.max(0, Math.ceil(achievements.length / pageSize) - 1);
+  achievementPage = Math.min(achievementPage, maxPage);
+  const visible = achievements.slice(achievementPage * pageSize, achievementPage * pageSize + pageSize);
+
+  $("[data-list='home-projects']").innerHTML = visible.map((item) => `
+    <figure class="achievement-item">
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <figcaption>
         <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
-        <span>${ZH_SITE.escapeHtml(item.award || item.category || "成果展示")}</span>
+        <span>${ZH_SITE.escapeHtml(item.note || "成果展示")}</span>
       </figcaption>
-    </a>
+    </figure>
   `).join("");
+
+  $$(`[data-achievement-prev], [data-achievement-next]`).forEach((button) => {
+    button.hidden = achievements.length <= pageSize;
+  });
 }
 
 function renderAbout() {
@@ -105,12 +127,66 @@ function renderAbout() {
   $("[data-about-image]").src = about.image;
   $("[data-about-mission]").textContent = about.missionTitle;
   $("[data-about-paragraphs]").innerHTML = about.paragraphs.map((text) => `<p>${ZH_SITE.escapeHtml(text)}</p>`).join("");
-  $("[data-about-stats]").innerHTML = about.stats.map((item) => `
-    <div class="stat-card">
+  $("[data-about-stats]").innerHTML = about.stats.map((item, index) => `
+    <a class="stat-card" href="${index === 0 ? "members.html" : index === 1 ? "projects.html" : "#"}">
       <strong>${ZH_SITE.escapeHtml(item.value)}</strong>
       <span>${ZH_SITE.escapeHtml(item.label)}</span>
-    </div>
+    </a>
   `).join("");
+  renderAboutCharts();
+}
+
+function pieSegments(items) {
+  const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.value) || 0), 0) || 1;
+  let start = 0;
+  return items.map((item, index) => {
+    const percent = Math.max(0, Number(item.value) || 0) / total * 100;
+    const end = start + percent;
+    const segment = `${item.color || chartColor(index)} ${start}% ${end}%`;
+    start = end;
+    return segment;
+  }).join(", ");
+}
+
+function renderAboutCharts() {
+  const root = $("[data-about-charts]");
+  if (!root) return;
+  const charts = (siteContent.about && siteContent.about.charts) || [];
+  root.innerHTML = charts.map((chart) => {
+    const items = chart.items || [];
+    const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.value) || 0), 0);
+    return `
+      <article class="chart-card">
+        <h3>${ZH_SITE.escapeHtml(chart.title)}</h3>
+        <div class="pie-chart" style="--pie:${pieSegments(items)}"></div>
+        <div class="chart-legend">
+          ${items.map((item, index) => {
+            const value = Number(item.value) || 0;
+            const percent = total ? Math.round(value / total * 100) : 0;
+            return `<span><i style="background:${item.color || chartColor(index)}"></i>${ZH_SITE.escapeHtml(item.label)} ${percent}%</span>`;
+          }).join("")}
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function armAboutChartWheel() {
+  const section = $("[data-about-chart-section]");
+  if (!section || chartsArmed) return;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      chartsArmed = true;
+      observer.disconnect();
+    }
+  }, { threshold: 0.35 });
+  observer.observe(section);
+}
+
+function animateAboutCharts() {
+  if (!document.body.matches("[data-page='about']") || !chartsArmed || chartsAnimated) return;
+  chartsAnimated = true;
+  $$(".pie-chart").forEach((chart) => chart.classList.add("animate"));
 }
 
 function renderMembers() {
@@ -121,7 +197,7 @@ function renderMembers() {
       <div>
         <strong>${ZH_SITE.escapeHtml(item.name)}</strong>
         <span>${ZH_SITE.escapeHtml(item.title)}</span>
-        <p>${ZH_SITE.escapeHtml(item.awards || "暂无获奖情况")}</p>
+        <p>${ZH_SITE.escapeHtml(item.awards || "鏆傛棤鑾峰鎯呭喌")}</p>
       </div>
     </article>
   `).join("");
@@ -158,7 +234,7 @@ function renderActivitiesPage() {
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <div>
         <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
-        <p class="feed-meta">${ZH_SITE.escapeHtml(item.date)} · ${ZH_SITE.escapeHtml(item.place)}</p>
+        <p class="feed-meta">${ZH_SITE.escapeHtml(item.date)} 路 ${ZH_SITE.escapeHtml(item.place)}</p>
         <p>${ZH_SITE.escapeHtml(item.detail)}</p>
       </div>
     </button>
@@ -207,7 +283,7 @@ function openList(type) {
       ${items.map((item, index) => `
         <button type="button" data-open-detail="${type}" data-index="${index}">
           <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
-          <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` · ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
+          <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` 路 ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
         </button>
       `).join("")}
     </div>
@@ -271,6 +347,22 @@ function bindEvents() {
   if (menuButton) menuButton.addEventListener("click", () => $(".main-nav").classList.toggle("open"));
   const closeDetailButton = $("[data-close-detail]");
   if (closeDetailButton) closeDetailButton.addEventListener("click", closeDetail);
+  const achievementPrev = $("[data-achievement-prev]");
+  if (achievementPrev) achievementPrev.addEventListener("click", () => {
+    const count = (siteContent.achievements || []).length;
+    const maxPage = Math.max(0, Math.ceil(count / 3) - 1);
+    achievementPage = achievementPage <= 0 ? maxPage : achievementPage - 1;
+    renderAchievements();
+  });
+  const achievementNext = $("[data-achievement-next]");
+  if (achievementNext) achievementNext.addEventListener("click", () => {
+    const count = (siteContent.achievements || []).length;
+    const maxPage = Math.max(0, Math.ceil(count / 3) - 1);
+    achievementPage = achievementPage >= maxPage ? 0 : achievementPage + 1;
+    renderAchievements();
+  });
+  window.addEventListener("wheel", animateAboutCharts, { passive: true });
+  armAboutChartWheel();
   const detailModal = $("[data-detail-modal]");
   if (detailModal) {
     detailModal.addEventListener("click", (event) => {

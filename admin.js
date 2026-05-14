@@ -9,6 +9,7 @@ const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selec
 const titles = {
   basic: "基础与Logo",
   home: "首页内容",
+  achievements: "成果照片",
   announcements: "最新公告",
   about: "关于我们",
   members: "社团风采",
@@ -26,6 +27,7 @@ function applyTheme() {
 }
 
 function fillForms() {
+  if (!Array.isArray(data.achievements)) data.achievements = [];
   const basic = $("[data-panel='basic']");
   basic.elements.siteName.value = data.siteName;
   basic.elements.themeColor.value = data.themeColor || "#1768ff";
@@ -48,10 +50,15 @@ function fillForms() {
 }
 
 function renderEditors() {
+  if (!Array.isArray(data.achievements)) data.achievements = [];
+  ensureAboutCharts();
   renderEditor("features");
+  renderEditor("achievements");
   renderEditor("announcements");
   renderEditor("aboutParagraphs");
   renderEditor("aboutStats");
+  renderEditor("majorChart");
+  renderEditor("gradeChart");
   renderEditor("memberProfiles");
   renderEditor("clubMoments");
   renderEditor("projects");
@@ -68,11 +75,13 @@ function renderEditor(type) {
 function getItems(type) {
   if (type === "aboutParagraphs") return data.about.paragraphs.map((text) => ({ text }));
   if (type === "aboutStats") return data.about.stats;
+  if (type === "majorChart") return (data.about.charts && data.about.charts[0] && data.about.charts[0].items) || [];
+  if (type === "gradeChart") return (data.about.charts && data.about.charts[1] && data.about.charts[1].items) || [];
   return data[type] || [];
 }
 
 function card(type, item, index) {
-  const draggable = ["memberProfiles", "clubMoments", "projects", "activities"].includes(type);
+  const draggable = ["achievements", "memberProfiles", "clubMoments", "projects", "activities", "majorChart", "gradeChart"].includes(type);
   const removeable = !["features", "aboutParagraphs", "aboutStats"].includes(type);
   const body = {
     features: `
@@ -96,6 +105,28 @@ function card(type, item, index) {
         ${field("数字", "value", item.value)}
         ${field("说明", "label", item.label)}
       </div>
+    `,
+    majorChart: `
+      <div class="editor-grid">
+        ${field("分布名称", "label", item.label)}
+        ${field("人数/占比数值", "value", item.value)}
+        ${field("颜色", "color", item.color)}
+      </div>
+    `,
+    gradeChart: `
+      <div class="editor-grid">
+        ${field("分布名称", "label", item.label)}
+        ${field("人数/占比数值", "value", item.value)}
+        ${field("颜色", "color", item.color)}
+      </div>
+    `,
+    achievements: `
+      <div class="editor-grid">
+        ${field("照片标题", "title", item.title, "full")}
+        ${field("备注", "note", item.note)}
+        ${imageInput("成果照片", "image")}
+      </div>
+      <img class="thumb-preview" src="${item.image}" alt="成果照片预览">
     `,
     memberProfiles: `
       <div class="editor-grid">
@@ -151,8 +182,11 @@ function labelName(type) {
   return {
     features: "首页介绍图标",
     announcements: "公告",
+    achievements: "成果照片",
     aboutParagraphs: "关于我们段落",
     aboutStats: "统计卡片",
+    majorChart: "专业分布",
+    gradeChart: "年级分布",
     memberProfiles: "成员介绍",
     clubMoments: "活动风采",
     projects: "项目",
@@ -199,7 +233,22 @@ async function collect(type) {
 function getOriginal(type, index) {
   if (type === "aboutParagraphs") return { text: data.about.paragraphs[index] || "" };
   if (type === "aboutStats") return data.about.stats[index] || {};
+  if (type === "majorChart") return getItems("majorChart")[index] || {};
+  if (type === "gradeChart") return getItems("gradeChart")[index] || {};
   return (data[type] || [])[index] || {};
+}
+
+function ensureAboutCharts() {
+  if (!data.about.charts) {
+    data.about.charts = [
+      { title: "成员专业分布图", items: [] },
+      { title: "成员年级分布图", items: [] }
+    ];
+  }
+  if (!data.about.charts[0]) data.about.charts[0] = { title: "成员专业分布图", items: [] };
+  if (!data.about.charts[1]) data.about.charts[1] = { title: "成员年级分布图", items: [] };
+  if (!Array.isArray(data.about.charts[0].items)) data.about.charts[0].items = [];
+  if (!Array.isArray(data.about.charts[1].items)) data.about.charts[1].items = [];
 }
 
 async function save(message = "已保存") {
@@ -228,6 +277,9 @@ function switchPanel(name) {
 function newItem(type) {
   const map = {
     announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。" },
+    achievements: { title: "新的成果照片", note: "照片展示", image: ZH_SITE.placeholder("成果照片", "#1768ff") },
+    majorChart: { label: "新专业", value: 10, color: "#1768ff" },
+    gradeChart: { label: "新年级", value: 10, color: "#1768ff" },
     memberProfiles: { name: "新成员", title: "自定义头衔/职称", awards: "这里填写获奖情况。", image: ZH_SITE.placeholder("成员头像", "#1768ff") },
     clubMoments: { title: "新的活动风采", text: "这里填写活动照片下方文字。", image: ZH_SITE.placeholder("活动风采", "#19a680") },
     projects: { title: "新的项目", category: "项目分类", award: "填写获得的奖项", image: ZH_SITE.placeholder("项目图片", "#0aa878"), detail: "这里填写项目介绍。" },
@@ -237,7 +289,7 @@ function newItem(type) {
 }
 
 function moveItem(type, from, to) {
-  const list = data[type];
+  const list = getItems(type);
   if (!list || from === to || to < 0 || to >= list.length) return;
   const [item] = list.splice(from, 1);
   list.splice(to, 0, item);
@@ -313,11 +365,23 @@ function bind() {
     data.about.missionTitle = form.elements.missionTitle.value.trim();
     data.about.paragraphs = (await collect("aboutParagraphs")).map((item) => item.text);
     data.about.stats = await collect("aboutStats");
+    ensureAboutCharts();
+    data.about.charts[0].items = await collect("majorChart");
+    data.about.charts[1].items = await collect("gradeChart");
     if (form.elements.image.files[0]) {
       data.about.image = await ZH_SITE.uploadImage(form.elements.image.files[0]);
       form.elements.image.value = "";
     }
     await save();
+    renderEditor("majorChart");
+    renderEditor("gradeChart");
+  });
+
+  $("[data-panel='achievements']").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    data.achievements = await collect("achievements");
+    await save();
+    renderEditor("achievements");
   });
 
   $("[data-panel='members']").addEventListener("submit", async (event) => {
@@ -355,12 +419,13 @@ function bind() {
   document.addEventListener("click", (event) => {
     const add = event.target.closest("[data-add]");
     if (add) {
-      data[add.dataset.add].push(newItem(add.dataset.add));
+      const list = getItems(add.dataset.add);
+      list.push(newItem(add.dataset.add));
       renderEditor(add.dataset.add);
     }
     const remove = event.target.closest("[data-remove]");
     if (remove) {
-      data[remove.dataset.remove].splice(Number(remove.dataset.index), 1);
+      getItems(remove.dataset.remove).splice(Number(remove.dataset.index), 1);
       renderEditor(remove.dataset.remove);
     }
   });

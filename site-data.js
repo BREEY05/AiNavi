@@ -55,6 +55,11 @@ const ZH_SITE = (() => {
       { icon: "trophy", title: "竞赛培训" },
       { icon: "idea", title: "创新探索" }
     ],
+    achievements: [
+      { title: "成果照片一", image: placeholder("成果照片一", "#1768ff"), note: "照片展示" },
+      { title: "成果照片二", image: placeholder("成果照片二", "#0aa878"), note: "照片展示" },
+      { title: "成果照片三", image: placeholder("成果照片三", "#705cff"), note: "照片展示" }
+    ],
     announcements: [
       { tag: "通知", type: "info", title: "智航AI协会例会通知（第12周）", date: "05-20", detail: "本周例会将围绕近期项目进度、技术分享安排和成员分组进行说明，请各位成员准时参加。" },
       { tag: "活动", type: "activity", title: "【技术分享会】大模型在实际项目中的应用", date: "05-18", detail: "本次分享会将结合真实项目案例，介绍大模型调用、提示词设计、知识库应用与落地流程。" },
@@ -73,6 +78,26 @@ const ZH_SITE = (() => {
       stats: [
         { value: "50+", label: "活跃成员" },
         { value: "12", label: "技术项目" }
+      ],
+      charts: [
+        {
+          title: "成员专业分布图",
+          items: [
+            { label: "计算机类", value: 38, color: "#1768ff" },
+            { label: "人工智能", value: 28, color: "#19a680" },
+            { label: "软件工程", value: 20, color: "#f18423" },
+            { label: "其他专业", value: 14, color: "#8561ec" }
+          ]
+        },
+        {
+          title: "成员年级分布图",
+          items: [
+            { label: "大一", value: 24, color: "#1768ff" },
+            { label: "大二", value: 36, color: "#19a680" },
+            { label: "大三", value: 28, color: "#f18423" },
+            { label: "大四", value: 12, color: "#8561ec" }
+          ]
+        }
       ]
     },
     memberProfiles: [
@@ -113,6 +138,18 @@ const ZH_SITE = (() => {
 
   function merge(base, saved) {
     Object.keys(saved || {}).forEach((key) => {
+      if (
+        base[key] &&
+        saved[key] &&
+        typeof base[key] === "object" &&
+        typeof saved[key] === "object" &&
+        !Array.isArray(base[key]) &&
+        !Array.isArray(saved[key])
+      ) {
+        base[key] = merge(base[key], saved[key]);
+        return;
+      }
+
       base[key] = saved[key];
     });
     return base;

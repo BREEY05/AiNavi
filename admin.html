@@ -23,6 +23,7 @@
     <aside class="admin-sidebar">
       <button class="active" type="button" data-section="basic">基础与Logo</button>
       <button type="button" data-section="home">首页内容</button>
+      <button type="button" data-section="achievements">成果照片</button>
       <button type="button" data-section="announcements">最新公告</button>
       <button type="button" data-section="about">关于我们</button>
       <button type="button" data-section="members">社团风采</button>
@@ -69,6 +70,13 @@
         <button class="primary-button" type="submit">保存公告</button>
       </form>
 
+      <form class="manager-section" data-panel="achievements">
+        <p class="admin-tip">这里的内容只用于首页“成果展示”照片区，不会跳转到项目展示页面。超过三张时首页会出现左右切换。</p>
+        <div class="editor-list sortable-grid" data-editor="achievements"></div>
+        <button class="ghost-button" type="button" data-add="achievements">新增成果照片</button>
+        <button class="primary-button" type="submit">保存成果照片</button>
+      </form>
+
       <form class="manager-section" data-panel="about">
         <div class="form-grid">
           <label>标题<input name="title" type="text"></label>
@@ -79,6 +87,12 @@
         <img class="wide-preview" data-preview-about alt="关于我们预览">
         <div class="editor-list" data-editor="aboutParagraphs"></div>
         <div class="editor-list compact" data-editor="aboutStats"></div>
+        <h2 class="admin-subtitle">成员专业分布图</h2>
+        <div class="editor-list sortable-grid" data-editor="majorChart"></div>
+        <button class="ghost-button" type="button" data-add="majorChart">新增专业分布</button>
+        <h2 class="admin-subtitle">成员年级分布图</h2>
+        <div class="editor-list sortable-grid" data-editor="gradeChart"></div>
+        <button class="ghost-button" type="button" data-add="gradeChart">新增年级分布</button>
         <button class="primary-button" type="submit">保存关于我们</button>
       </form>
 
