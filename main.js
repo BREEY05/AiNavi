@@ -104,14 +104,14 @@ function renderAchievements() {
   achievementPage = Math.min(achievementPage, maxPage);
   const visible = achievements.slice(achievementPage * pageSize, achievementPage * pageSize + pageSize);
 
-  $("[data-list='home-projects']").innerHTML = visible.map((item) => `
-    <figure class="achievement-item">
+  $("[data-list='home-projects']").innerHTML = visible.map((item, index) => `
+    <button class="achievement-item" type="button" data-open-achievement="${achievementPage * pageSize + index}">
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <figcaption>
         <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
         <span>${ZH_SITE.escapeHtml(item.note || "成果展示")}</span>
       </figcaption>
-    </figure>
+    </button>
   `).join("");
 
   $$(`[data-achievement-prev], [data-achievement-next]`).forEach((button) => {
@@ -272,6 +272,18 @@ function openDetail(type, index) {
   $("[data-detail-modal]").hidden = false;
 }
 
+function openAchievement(index) {
+  const item = (siteContent.achievements || [])[index];
+  if (!item || !$("[data-detail-modal]")) return;
+  $("[data-detail-content]").innerHTML = `
+    <img class="detail-image achievement-detail-image" src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
+    <div class="detail-kicker">成果展示</div>
+    <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
+    <p>${ZH_SITE.escapeHtml(item.note || "暂无说明。")}</p>
+  `;
+  $("[data-detail-modal]").hidden = false;
+}
+
 function openList(type) {
   if (!$("[data-detail-modal]")) return;
   const title = type === "activities" ? "近期活动" : "最新公告";
@@ -396,6 +408,12 @@ function bindEvents() {
     const detailButton = event.target.closest("[data-open-detail]");
     if (detailButton) {
       openDetail(detailButton.dataset.openDetail, Number(detailButton.dataset.index));
+      return;
+    }
+
+    const achievementButton = event.target.closest("[data-open-achievement]");
+    if (achievementButton) {
+      openAchievement(Number(achievementButton.dataset.openAchievement));
       return;
     }
 
