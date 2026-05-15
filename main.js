@@ -270,6 +270,23 @@ function renderJoin() {
   if (!document.body.matches("[data-page='join']")) return;
   const join = siteContent.join;
   const memberImages = (siteContent.memberProfiles || []).map((item) => item.image).filter(Boolean);
+  const visibleMembers = memberImages.slice(0, 15);
+  const hiddenMembers = memberImages.slice(15);
+  const memberTiles = visibleMembers.map((image, index) => `
+    <img class="join-member-avatar" src="${image}" alt="成员头像 ${index + 1}">
+  `);
+  if (hiddenMembers.length) {
+    const stackImages = hiddenMembers.slice(0, 3);
+    memberTiles.push(`
+      <span class="join-member-more" aria-label="还有 ${hiddenMembers.length} 位成员">
+        ${stackImages.map((image, index) => `<img src="${image}" alt="" style="--stack:${index}">`).join("")}
+        <b>+${hiddenMembers.length}</b>
+      </span>
+    `);
+  }
+  while (memberTiles.length && memberTiles.length < 16) {
+    memberTiles.push(`<span class="join-member-placeholder" aria-hidden="true"></span>`);
+  }
   $("[data-join-title]").textContent = join.title;
   $("[data-join-subtitle]").textContent = join.subtitle;
   $("[data-join-logo]").style.backgroundImage = `url("${siteContent.logo}")`;
@@ -279,9 +296,7 @@ function renderJoin() {
   $("[data-join-phone]").textContent = join.phone;
   $("[data-join-recruit-title]").textContent = join.recruitTitle;
   $("[data-join-recruit-info]").innerHTML = ZH_SITE.escapeHtml(join.recruitInfo).replace(/\n/g, "<br>");
-  $("[data-join-members]").innerHTML = memberImages.length ? memberImages.slice(0, 16).map((image, index) => `
-    <img src="${image}" alt="成员头像 ${index + 1}">
-  `).join("") : `<span class="join-member-empty">成员头像将在这里展示</span>`;
+  $("[data-join-members]").innerHTML = memberTiles.length ? memberTiles.join("") : `<span class="join-member-empty">成员头像将在这里展示</span>`;
 }
 
 function openDetail(type, index) {
