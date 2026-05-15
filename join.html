@@ -14,23 +14,35 @@
       <button class="secret-logo-button" type="button" data-secret-login aria-label="隐藏入口"><span class="brand-logo" data-logo></span></button>
       <button class="menu-button" type="button" data-menu-toggle aria-label="展开导航"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </header>
-    <main class="sub-page">
+    <main class="sub-page join-page">
       <section class="join-hero">
         <span class="join-page-logo" data-join-logo></span>
         <h1 data-join-title></h1>
         <p data-join-subtitle></p>
+        <span class="join-title-mark" aria-hidden="true"></span>
       </section>
       <section class="join-layout">
         <article class="join-info">
           <h2>联系信息</h2>
-          <dl>
-            <dt>地址</dt><dd data-join-address></dd>
-            <dt>邮箱</dt><dd data-join-email></dd>
-            <dt>电话</dt><dd data-join-phone></dd>
+          <dl class="join-contact-list">
+            <div class="join-contact-item">
+              <dt><span class="join-contact-icon" aria-hidden="true">⌖</span>地址</dt>
+              <dd data-join-address></dd>
+            </div>
+            <div class="join-contact-item">
+              <dt><span class="join-contact-icon" aria-hidden="true">@</span>邮箱</dt>
+              <dd data-join-email></dd>
+            </div>
+            <div class="join-contact-item">
+              <dt><span class="join-contact-icon" aria-hidden="true">☎</span>电话</dt>
+              <dd data-join-phone></dd>
+            </div>
           </dl>
         </article>
-        <article class="join-info">
-          <h2>加入我们</h2>
+        <article class="join-info join-members-panel">
+          <h2>我们的成员</h2>
+          <div class="join-member-wall" data-join-members></div>
+          <strong class="join-slogan">一起创造 · 共同成长</strong>
           <p data-join-intro></p>
           <div class="recruit-box">
             <h3 data-join-recruit-title></h3>

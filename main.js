@@ -269,6 +269,7 @@ function renderActivitiesPage() {
 function renderJoin() {
   if (!document.body.matches("[data-page='join']")) return;
   const join = siteContent.join;
+  const memberImages = (siteContent.memberProfiles || []).map((item) => item.image).filter(Boolean);
   $("[data-join-title]").textContent = join.title;
   $("[data-join-subtitle]").textContent = join.subtitle;
   $("[data-join-logo]").style.backgroundImage = `url("${siteContent.logo}")`;
@@ -278,6 +279,9 @@ function renderJoin() {
   $("[data-join-phone]").textContent = join.phone;
   $("[data-join-recruit-title]").textContent = join.recruitTitle;
   $("[data-join-recruit-info]").innerHTML = ZH_SITE.escapeHtml(join.recruitInfo).replace(/\n/g, "<br>");
+  $("[data-join-members]").innerHTML = memberImages.map((image, index) => `
+    <img src="${image}" alt="成员头像 ${index + 1}">
+  `).join("");
 }
 
 function openDetail(type, index) {
