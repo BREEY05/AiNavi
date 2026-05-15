@@ -1134,13 +1134,15 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   grid-template-columns: minmax(23rem, 0.78fr) minmax(35rem, 1.22fr);
   gap: 2rem;
   width: min(96rem, calc(100vw - 3.5rem));
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   padding: 2.1rem 2.35rem;
+  min-height: 36rem;
   border: 1px solid #dce8f6;
   border-radius: 0.8rem;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 1rem 2.8rem rgba(30, 82, 150, 0.11);
   backdrop-filter: blur(12px);
+  align-content: start;
 }
 
 .join-info {
