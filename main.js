@@ -279,9 +279,9 @@ function renderJoin() {
   $("[data-join-phone]").textContent = join.phone;
   $("[data-join-recruit-title]").textContent = join.recruitTitle;
   $("[data-join-recruit-info]").innerHTML = ZH_SITE.escapeHtml(join.recruitInfo).replace(/\n/g, "<br>");
-  $("[data-join-members]").innerHTML = memberImages.map((image, index) => `
+  $("[data-join-members]").innerHTML = memberImages.length ? memberImages.slice(0, 16).map((image, index) => `
     <img src="${image}" alt="成员头像 ${index + 1}">
-  `).join("");
+  `).join("") : `<span class="join-member-empty">成员头像将在这里展示</span>`;
 }
 
 function openDetail(type, index) {
