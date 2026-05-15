@@ -163,11 +163,13 @@ function chartLabels(items) {
     const labelY = 50 + Math.sin(rad) * 36;
     const lineX = 50 + Math.cos(rad) * 26;
     const lineY = 50 + Math.sin(rad) * 22;
-    const width = Math.max(9, Math.abs(labelX - lineX));
+    const width = Math.max(11, Math.abs(labelX - lineX));
     const angle = Math.atan2(labelY - lineY, labelX - lineX) * 180 / Math.PI;
+    const clampedX = Math.min(88, Math.max(12, labelX));
+    const clampedY = Math.min(84, Math.max(16, labelY));
 
     return `
-      <span class="chart-label ${side}" style="left:${labelX}%; top:${labelY}%;">
+      <span class="chart-label ${side}" style="left:${clampedX}%; top:${clampedY}%;">
         <i style="background:${item.color || chartColor(index)}"></i>${ZH_SITE.escapeHtml(item.label)} ${Math.round(percent)}%
       </span>
       <span class="chart-line" style="left:${lineX}%; top:${lineY}%; width:${width}%; transform:rotate(${angle}deg);"></span>

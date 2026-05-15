@@ -732,7 +732,8 @@ body[data-page="home"] .site-shell {
   position: relative;
   width: min(31rem, 88vw);
   height: 22rem;
-  contain: layout paint;
+  overflow: visible;
+  contain: layout;
 }
 
 .pie-base,
