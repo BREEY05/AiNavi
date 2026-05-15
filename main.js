@@ -284,9 +284,6 @@ function renderJoin() {
       </span>
     `);
   }
-  while (memberTiles.length && memberTiles.length < 16) {
-    memberTiles.push(`<span class="join-member-placeholder" aria-hidden="true"></span>`);
-  }
   $("[data-join-title]").textContent = join.title;
   $("[data-join-subtitle]").textContent = join.subtitle;
   $("[data-join-logo]").style.backgroundImage = `url("${siteContent.logo}")`;
