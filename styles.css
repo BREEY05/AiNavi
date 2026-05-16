@@ -1084,10 +1084,10 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .join-hero {
   display: grid;
   place-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.8rem;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
   text-align: center;
-  padding-top: 2.5rem;
+  padding-top: 1rem;
 }
 
 .join-page-logo {
@@ -1100,7 +1100,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-hero h1 {
-  margin: 0.2rem 0 0;
+  margin: 0.1rem 0 0;
   color: #1a2744;
   font-size: clamp(2.8rem, 5vw, 4.2rem);
   font-weight: 900;
@@ -1111,7 +1111,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-hero p {
   width: min(54rem, 88vw);
-  margin: 0.6rem 0 0;
+  margin: 0.4rem 0 0;
   color: #4a5568;
   font-size: 1.15rem;
   line-height: 1.6;
@@ -1123,7 +1123,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   width: 100%;
   max-width: 600px;
   height: 2px;
-  margin-top: 1.2rem;
+  margin-top: 1rem;
   background: linear-gradient(90deg, transparent, #cbd5e1 20%, #94a3b8 50%, #cbd5e1 80%, transparent);
   border-radius: 1px;
 }
@@ -1133,7 +1133,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   grid-template-columns: minmax(23rem, 0.78fr) minmax(35rem, 1.22fr);
   gap: 2rem;
   width: min(96rem, calc(100vw - 3.5rem));
-  margin: 0 auto 1rem;
+  margin: 0 auto;
   padding: 2.5rem;
   min-height: 38rem;
   border: 1px solid #e2e8f0;
@@ -1315,14 +1315,15 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .recruit-box {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 11.2rem;
+  grid-template-columns: minmax(0, 1fr) 12rem;
   gap: 1rem;
   align-items: center;
   margin-top: 1.5rem;
+  margin-bottom: 1rem;
   padding: 1.2rem;
   border: 1px solid #f1f5f9;
   border-radius: 0.6rem;
-  background: #fafbfc;
+  background: #ffffff;
 }
 
 .recruit-box h3 {
@@ -1341,10 +1342,9 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .dino-stage {
   position: relative;
-  height: 6rem;
+  height: 7rem;
   overflow: hidden;
-  border-left: 1px solid #e2e8f0;
-  background: #ffffff;
+  background: transparent;
   border-radius: 0 0.4rem 0.4rem 0;
 }
 
@@ -1352,7 +1352,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 1.2rem;
+  bottom: 0.8rem;
   height: 1px;
   background: #535353;
   animation: dino-ground 0.18s linear infinite;
@@ -1364,67 +1364,70 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   image-rendering: pixelated;
 }
 
-/* Chrome Dino - Realistic pixel dinosaur */
+/* Chrome Dino - Pixel dinosaur scaled to fit */
 .dino-runner {
-  left: 1rem;
-  bottom: 1.2rem;
-  width: 4.4rem;
-  height: 4.4rem;
+  left: 0.5rem;
+  bottom: 0.8rem;
+  width: 8.8rem;
+  height: 8.8rem;
   color: #535353;
   background: transparent;
-  /* Head */
+  /* Chrome Dino pixel art - each "pixel" is 0.8rem, scaled up */
   box-shadow:
-    /* Top of head and eye */
-    2.2rem 0rem 0 0 currentColor,
-    2.6rem 0rem 0 0 currentColor,
+    /* Row 1 - top of head */
+    4.4rem 0 0 0 currentColor,
+    5.2rem 0 0 0 currentColor,
+    /* Row 2 - eye area */
+    4.4rem -0.8rem 0 0 currentColor,
+    5.2rem -0.8rem 0 0 currentColor,
     /* Eye white */
-    2.6rem -0.4rem 0 0 #fff,
-    /* Face */
-    1.4rem -0.4rem 0 0 currentColor,
-    1.8rem -0.4rem 0 0 currentColor,
-    2.2rem -0.4rem 0 0 currentColor,
-    /* Upper mouth */
-    0.6rem -0.8rem 0 0 currentColor,
-    1rem -0.8rem 0 0 currentColor,
-    1.4rem -0.8rem 0 0 currentColor,
-    1.8rem -0.8rem 0 0 currentColor,
-    /* Lower body */
-    0 -1.2rem 0 0 currentColor,
-    0.4rem -1.2rem 0 0 currentColor,
-    0.8rem -1.2rem 0 0 currentColor,
-    1.2rem -1.2rem 0 0 currentColor,
-    1.6rem -1.2rem 0 0 currentColor,
-    2rem -1.2rem 0 0 currentColor,
-    2.4rem -1.2rem 0 0 currentColor,
-    /* Body */
-    0 -1.6rem 0 0 currentColor,
-    0.4rem -1.6rem 0 0 currentColor,
-    0.8rem -1.6rem 0 0 currentColor,
-    1.2rem -1.6rem 0 0 currentColor,
-    1.6rem -1.6rem 0 0 currentColor,
-    2rem -1.6rem 0 0 currentColor,
-    2.4rem -1.6rem 0 0 currentColor,
+    5.2rem -1.6rem 0 0 #fff,
+    /* Row 3 - face */
     2.8rem -1.6rem 0 0 currentColor,
-    /* Arms */
-    1.2rem -2rem 0 0 currentColor,
-    1.6rem -2rem 0 0 currentColor,
-    2rem -2rem 0 0 currentColor,
-    /* Upper legs and tail */
-    0.4rem -2.4rem 0 0 currentColor,
-    0.8rem -2.4rem 0 0 currentColor,
+    3.6rem -1.6rem 0 0 currentColor,
+    4.4rem -1.6rem 0 0 currentColor,
+    5.2rem -1.6rem 0 0 currentColor,
+    6rem -1.6rem 0 0 currentColor,
+    /* Row 4 - upper mouth */
     1.2rem -2.4rem 0 0 currentColor,
-    3.2rem -2.4rem 0 0 currentColor,
+    2rem -2.4rem 0 0 currentColor,
+    2.8rem -2.4rem 0 0 currentColor,
     3.6rem -2.4rem 0 0 currentColor,
-    /* Lower legs */
-    0.4rem -2.8rem 0 0 currentColor,
-    0.8rem -2.8rem 0 0 currentColor,
-    1.2rem -2.8rem 0 0 currentColor,
-    1.6rem -2.8rem 0 0 currentColor,
-    /* Feet */
-    0.2rem -3.2rem 0 0 currentColor,
-    0.6rem -3.2rem 0 0 currentColor,
-    1.4rem -3.2rem 0 0 currentColor,
-    1.8rem -3.2rem 0 0 currentColor;
+    4.4rem -2.4rem 0 0 currentColor,
+    /* Row 5 - neck/body top */
+    0 -3.2rem 0 0 currentColor,
+    0.8rem -3.2rem 0 0 currentColor,
+    1.6rem -3.2rem 0 0 currentColor,
+    2.4rem -3.2rem 0 0 currentColor,
+    /* Row 6 - body */
+    0 -4rem 0 0 currentColor,
+    0.8rem -4rem 0 0 currentColor,
+    1.6rem -4rem 0 0 currentColor,
+    2.4rem -4rem 0 0 currentColor,
+    3.2rem -4rem 0 0 currentColor,
+    4rem -4rem 0 0 currentColor,
+    4.8rem -4rem 0 0 currentColor,
+    5.6rem -4rem 0 0 currentColor,
+    /* Row 7 - arms */
+    2.4rem -4.8rem 0 0 currentColor,
+    3.2rem -4.8rem 0 0 currentColor,
+    4rem -4.8rem 0 0 currentColor,
+    /* Row 8 - upper legs & tail */
+    0.8rem -5.6rem 0 0 currentColor,
+    1.6rem -5.6rem 0 0 currentColor,
+    2.4rem -5.6rem 0 0 currentColor,
+    6.4rem -5.6rem 0 0 currentColor,
+    7.2rem -5.6rem 0 0 currentColor,
+    /* Row 9 - lower legs */
+    0.8rem -6.4rem 0 0 currentColor,
+    1.6rem -6.4rem 0 0 currentColor,
+    2.4rem -6.4rem 0 0 currentColor,
+    3.2rem -6.4rem 0 0 currentColor,
+    /* Row 10 - feet */
+    0.4rem -7.2rem 0 0 currentColor,
+    1.2rem -7.2rem 0 0 currentColor,
+    2.8rem -7.2rem 0 0 currentColor,
+    3.6rem -7.2rem 0 0 currentColor;
   animation: dino-jump 0.6s cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
 }
 
@@ -1432,51 +1435,51 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   content: none;
 }
 
-/* Chrome Cactus */
+/* Chrome Cactus - Scaled */
 .dino-cactus {
-  right: -3rem;
-  bottom: 1.2rem;
-  width: 2.6rem;
-  height: 3.8rem;
+  right: -5rem;
+  bottom: 0.8rem;
+  width: 5.2rem;
+  height: 7.6rem;
   color: #535353;
   box-shadow:
     /* Main trunk */
-    0.4rem 0 0 0 currentColor,
     0.8rem 0 0 0 currentColor,
-    1.2rem 0 0 0 currentColor,
-    0.4rem -0.4rem 0 0 currentColor,
-    0.8rem -0.4rem 0 0 currentColor,
-    1.2rem -0.4rem 0 0 currentColor,
-    0.4rem -0.8rem 0 0 currentColor,
+    1.6rem 0 0 0 currentColor,
+    2.4rem 0 0 0 currentColor,
     0.8rem -0.8rem 0 0 currentColor,
-    1.2rem -0.8rem 0 0 currentColor,
-    0.4rem -1.2rem 0 0 currentColor,
-    0.8rem -1.2rem 0 0 currentColor,
-    1.2rem -1.2rem 0 0 currentColor,
-    0.4rem -1.6rem 0 0 currentColor,
+    1.6rem -0.8rem 0 0 currentColor,
+    2.4rem -0.8rem 0 0 currentColor,
     0.8rem -1.6rem 0 0 currentColor,
-    1.2rem -1.6rem 0 0 currentColor,
-    0.4rem -2rem 0 0 currentColor,
-    0.8rem -2rem 0 0 currentColor,
-    1.2rem -2rem 0 0 currentColor,
-    0.4rem -2.4rem 0 0 currentColor,
-    0.8rem -2.4rem 0 0 currentColor,
-    1.2rem -2.4rem 0 0 currentColor,
-    0.4rem -2.8rem 0 0 currentColor,
-    0.8rem -2.8rem 0 0 currentColor,
-    1.2rem -2.8rem 0 0 currentColor,
-    0.6rem -3.2rem 0 0 currentColor,
-    1rem -3.2rem 0 0 currentColor,
-    /* Left arm */
-    0 -0.8rem 0 0 currentColor,
-    0 -1.2rem 0 0 currentColor,
-    0 -1.6rem 0 0 currentColor,
-    -0.4rem -1.2rem 0 0 currentColor,
-    /* Right arm */
     1.6rem -1.6rem 0 0 currentColor,
-    2rem -1.6rem 0 0 currentColor,
-    2rem -2rem 0 0 currentColor;
-  animation: cactus-run 2s linear infinite;
+    2.4rem -1.6rem 0 0 currentColor,
+    0.8rem -2.4rem 0 0 currentColor,
+    1.6rem -2.4rem 0 0 currentColor,
+    2.4rem -2.4rem 0 0 currentColor,
+    0.8rem -3.2rem 0 0 currentColor,
+    1.6rem -3.2rem 0 0 currentColor,
+    2.4rem -3.2rem 0 0 currentColor,
+    0.8rem -4rem 0 0 currentColor,
+    1.6rem -4rem 0 0 currentColor,
+    2.4rem -4rem 0 0 currentColor,
+    0.8rem -4.8rem 0 0 currentColor,
+    1.6rem -4.8rem 0 0 currentColor,
+    2.4rem -4.8rem 0 0 currentColor,
+    0.8rem -5.6rem 0 0 currentColor,
+    1.6rem -5.6rem 0 0 currentColor,
+    2.4rem -5.6rem 0 0 currentColor,
+    1.2rem -6.4rem 0 0 currentColor,
+    2rem -6.4rem 0 0 currentColor,
+    /* Left arm */
+    0 -1.6rem 0 0 currentColor,
+    0 -2.4rem 0 0 currentColor,
+    0 -3.2rem 0 0 currentColor,
+    -0.8rem -2.4rem 0 0 currentColor,
+    /* Right arm */
+    3.2rem -3.2rem 0 0 currentColor,
+    4rem -3.2rem 0 0 currentColor,
+    4rem -4rem 0 0 currentColor;
+  animation: cactus-run 3s linear infinite;
 }
 
 @keyframes dino-jump {
@@ -1484,7 +1487,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-1.8rem);
+    transform: translateY(-3.6rem);
   }
 }
 
@@ -1493,7 +1496,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-15rem);
+    transform: translateX(-16rem);
   }
 }
 
@@ -1864,13 +1867,23 @@ select:focus {
 
   .recruit-box {
     grid-template-columns: 1fr;
+    margin-bottom: 1rem;
   }
 
   .dino-stage {
-    height: 5.5rem;
-    border-left: none;
-    border-top: 1px solid #e2e8f0;
-    border-radius: 0 0 0.4rem 0.4rem;
+    height: 6rem;
+    border: none;
+    border-radius: 0;
+  }
+
+  .dino-runner {
+    width: 7rem;
+    height: 7rem;
+  }
+
+  .dino-cactus {
+    width: 4.2rem;
+    height: 6.2rem;
   }
 
   .activity-feed-item img,
