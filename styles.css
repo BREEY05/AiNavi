@@ -88,7 +88,10 @@ body[data-page="home"] .site-shell {
 }
 
 body[data-page="join"] {
-  background: #ffffff;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(23, 104, 255, 0.1) 0 8rem, transparent 18rem),
+    radial-gradient(circle at 86% 82%, rgba(114, 171, 255, 0.16) 0 10rem, transparent 24rem),
+    linear-gradient(180deg, #f5faff 0%, #ffffff 46%, #f3f8ff 100%);
 }
 
 body[data-page="join"] .site-shell {
@@ -98,7 +101,8 @@ body[data-page="join"] .site-shell {
 body[data-page="join"] .site-header {
   width: min(1560px, calc(100% - 2rem));
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.82);
+  min-height: 64px;
+  background: rgba(255, 255, 255, 0.68);
   border: 0;
   box-shadow: none;
 }
@@ -1075,24 +1079,24 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-page {
-  min-height: calc(100vh - 78px);
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+  min-height: calc(100vh - 64px);
+  padding-top: 0;
+  padding-bottom: 0.9rem;
   color: var(--ink);
 }
 
 .join-hero {
   display: grid;
   place-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.2rem;
+  gap: 0.28rem;
+  margin-bottom: 0.55rem;
   text-align: center;
-  padding-top: 1rem;
+  padding-top: 0;
 }
 
 .join-page-logo {
-  width: min(38rem, 78vw);
-  height: 13.5rem;
+  width: min(34rem, 76vw);
+  height: clamp(6.8rem, 14vh, 9.4rem);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -1100,21 +1104,21 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-hero h1 {
-  margin: 0.1rem 0 0;
+  margin: -0.1rem 0 0;
   color: #1a2744;
-  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-size: clamp(2.4rem, 4.2vw, 3.45rem);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   text-shadow: none;
 }
 
 .join-hero p {
   width: min(54rem, 88vw);
-  margin: 0.4rem 0 0;
+  margin: 0.15rem 0 0;
   color: #4a5568;
-  font-size: 1.15rem;
-  line-height: 1.6;
+  font-size: 1.02rem;
+  line-height: 1.42;
   letter-spacing: 0.02em;
 }
 
@@ -1123,8 +1127,8 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   width: 100%;
   max-width: 600px;
   height: 2px;
-  margin-top: 1rem;
-  background: linear-gradient(90deg, transparent, #cbd5e1 20%, #94a3b8 50%, #cbd5e1 80%, transparent);
+  margin-top: 0.45rem;
+  background: linear-gradient(90deg, transparent, #c7dcf6 20%, #6fa2e8 50%, #c7dcf6 80%, transparent);
   border-radius: 1px;
 }
 
@@ -1133,17 +1137,17 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   grid-template-columns: minmax(22rem, 1fr) minmax(32rem, 1.5fr);
   gap: 0;
   width: min(96rem, calc(100vw - 3.5rem));
-  margin: 0 auto 2.5rem;
-  padding: 1.75rem 2rem;
-  border: 1px solid #e5e7eb;
+  margin: 0 auto 1.15rem;
+  padding: 1.25rem 1.55rem;
+  border: 1px solid #d6e7fb;
   border-radius: 0.75rem;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 16px 42px rgba(66, 126, 203, 0.12);
 }
 
 .join-info {
   min-width: 0;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
   display: flex;
   flex-direction: column;
 }
@@ -1157,16 +1161,16 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-info + .join-info {
-  border-left: 1px solid #e5e7eb;
+  border-left: 1px solid #d8e8fb;
 }
 
 .join-info h2 {
   position: relative;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
   color: #1f2937;
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .join-info h2::after {
@@ -1181,8 +1185,8 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-contact-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
   gap: 0.75rem;
   margin: 0;
   height: 100%;
@@ -1190,23 +1194,23 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-contact-item {
   display: grid;
-  grid-template-columns: 3rem 1fr;
+  grid-template-columns: 3rem 4.2rem minmax(0, 1fr);
   gap: 0.75rem;
   align-items: center;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
+  min-height: 5rem;
+  padding: 0.86rem 0.95rem;
+  border: 1px solid #cfe4fb;
   border-radius: 0.5rem;
-  background: #fafafa;
-  flex: 1;
+  background: linear-gradient(135deg, #f4faff 0%, #ffffff 100%);
 }
 
 .join-contact-item:last-child {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #cfe4fb;
 }
 
 .join-info dt {
   display: contents;
-  color: #374151;
+  color: #24364f;
   font-weight: 500;
 }
 
@@ -1216,17 +1220,18 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   width: 3rem;
   height: 3rem;
   border-radius: 0.5rem;
-  color: #3b82f6;
+  color: #246fd8;
   font-size: 1.1rem;
-  background: #eff6ff;
+  background: #e6f1ff;
 }
 
 .join-info dd {
   margin: 0;
-  color: #6b7280;
+  color: #53627a;
   text-align: left;
-  line-height: 1.6;
+  line-height: 1.45;
   font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
 
 .join-members-panel {
@@ -1235,14 +1240,15 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-member-wall {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(3.2rem, 1fr));
-  grid-auto-rows: 3.2rem;
-  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
+  grid-auto-rows: 3rem;
+  gap: 0.52rem;
   align-items: center;
   width: 100%;
-  margin: 0.2rem 0 1.5rem;
-  padding: 0.8rem;
-  background: #f8fafc;
+  margin: 0.1rem 0 1rem;
+  padding: 0.72rem;
+  background: linear-gradient(135deg, #f2f8ff 0%, #ffffff 100%);
+  border: 1px solid #d3e6fb;
   border-radius: 0.6rem;
 }
 
@@ -1250,11 +1256,11 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .join-member-more,
 .join-member-placeholder {
   justify-self: center;
-  width: 3rem;
+  width: 2.86rem;
   aspect-ratio: 1;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #d7e8fb;
   border-radius: 50%;
-  background: #f1f5f9;
+  background: #edf6ff;
 }
 
 .join-member-avatar {
@@ -1310,7 +1316,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-slogan {
   justify-self: center;
-  margin: 0.2rem 0 1rem;
+  margin: 0.1rem 0 0.65rem;
   color: #1a2744;
   font-size: 1.1rem;
   font-weight: 600;
@@ -1319,17 +1325,17 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-info p,
 .join-intro {
-  margin: 0.5rem 0 0;
+  margin: 0.25rem 0 0;
   color: #6b7280;
-  line-height: 1.6;
+  line-height: 1.52;
   font-size: 0.95rem;
 }
 
 .join-recruit {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: #f9fafb;
-  border-radius: 0.4rem;
+  margin-top: 0;
+  padding: 0.75rem 0.85rem;
+  background: transparent;
+  border-radius: 0;
 }
 
 .join-recruit h3 {
@@ -1350,14 +1356,14 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .recruit-box {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(14rem, 0.42fr) minmax(22rem, 1fr);
-  gap: 1rem;
+  grid-template-columns: minmax(13rem, 0.38fr) minmax(22rem, 1fr);
+  gap: 0.75rem;
   align-items: stretch;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e5e7eb;
+  margin-top: 0.85rem;
+  margin-bottom: 0;
+  border: 1px solid #cfe4fb;
   border-radius: 0.65rem;
-  background: #fbfdff;
+  background: rgba(245, 250, 255, 0.76);
   overflow: hidden;
 }
 
@@ -1389,7 +1395,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .dino-stage {
   position: relative;
   width: 100%;
-  min-height: 7.2rem;
+  min-height: 4.75rem;
   align-self: stretch;
   overflow: hidden;
   background: transparent;
@@ -1399,12 +1405,12 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .dino-ground {
   position: absolute;
-  left: 0.4rem;
-  right: 0.4rem;
-  bottom: 1.18rem;
+  left: 0.35rem;
+  right: 0.45rem;
+  bottom: 0.72rem;
   height: 0;
-  border-bottom: 2px solid #7a7a7a;
-  opacity: 0.58;
+  border-bottom: 2px solid #686868;
+  opacity: 0.54;
 }
 
 .dino-ground::after {
@@ -1425,9 +1431,9 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .dino-runner {
-  --dino-size: clamp(4.2rem, 7.4vw, 5.8rem);
-  left: 0.8rem;
-  bottom: 1.18rem;
+  --dino-size: clamp(2.85rem, 4.2vw, 3.55rem);
+  left: 0.65rem;
+  bottom: 0.72rem;
   width: var(--dino-size);
   height: var(--dino-size);
   color: #535353;
@@ -1454,9 +1460,9 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .dino-cactus {
-  --cactus-width: clamp(1.55rem, 2.6vw, 2rem);
+  --cactus-width: clamp(1rem, 1.55vw, 1.28rem);
   right: calc(-1 * var(--cactus-width));
-  bottom: 1.18rem;
+  bottom: 0.72rem;
   width: var(--cactus-width);
   height: calc(var(--cactus-width) * 2.45);
   color: #535353;
@@ -1474,7 +1480,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     transform: translateY(0);
   }
   42%, 58% {
-    transform: translateY(calc(-1 * clamp(3.2rem, 5.4vw, 4.6rem)));
+    transform: translateY(calc(-1 * clamp(1.75rem, 3vw, 2.28rem)));
   }
 }
 
@@ -1483,7 +1489,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-100vw + 7rem));
+    transform: translateX(-48rem);
   }
 }
 
@@ -1831,7 +1837,7 @@ select:focus {
   .join-info {
     padding: 1.5rem 0;
     border-left: none !important;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #d8e8fb;
   }
 
   .join-info:first-child {
@@ -1858,20 +1864,20 @@ select:focus {
   }
 
   .dino-stage {
-    min-height: 6rem;
-    margin-top: 1rem;
+    min-height: 4.4rem;
+    margin-top: 0;
   }
 
   .dino-runner {
-    --dino-size: 4rem;
+    --dino-size: 3rem;
   }
 
   .dino-cactus {
-    --cactus-width: 1.45rem;
+    --cactus-width: 1.05rem;
   }
 
   .join-page {
-    padding-top: 1.5rem;
+    padding-top: 0.75rem;
   }
 
   .join-page-logo {
@@ -1902,7 +1908,7 @@ select:focus {
   }
 
   .join-contact-item {
-    grid-template-columns: 3.6rem 1fr;
+    grid-template-columns: 3rem 3.7rem minmax(0, 1fr);
   }
 
   .join-contact-icon {
@@ -1923,16 +1929,15 @@ select:focus {
   }
 
   .dino-stage {
-    height: 3rem;
+    min-height: 4rem;
+    height: auto;
   }
 
   .dino-runner {
-    width: 2.8rem;
-    height: 2.8rem;
+    --dino-size: 2.8rem;
   }
 
   .dino-cactus {
-    width: 1rem;
-    height: 1.4rem;
+    --cactus-width: 0.95rem;
   }
 }
