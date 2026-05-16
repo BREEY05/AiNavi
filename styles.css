@@ -1091,8 +1091,8 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-page-logo {
-  width: 24rem;
-  height: 12rem;
+  width: min(38rem, 78vw);
+  height: 13.5rem;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -1133,9 +1133,8 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   grid-template-columns: minmax(22rem, 1fr) minmax(32rem, 1.5fr);
   gap: 0;
   width: min(96rem, calc(100vw - 3.5rem));
-  margin: 0 auto 1rem;
-  padding: 2rem;
-  min-height: 28rem;
+  margin: 0 auto 2.5rem;
+  padding: 1.75rem 2rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
   background: #ffffff;
@@ -1145,6 +1144,8 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .join-info {
   min-width: 0;
   padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .join-info:first-child {
@@ -1161,7 +1162,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .join-info h2 {
   position: relative;
-  margin: 0 0 1.6rem;
+  margin: 0 0 1.5rem;
   color: #1f2937;
   font-size: 1.5rem;
   font-weight: 600;
@@ -1172,7 +1173,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -0.6rem;
+  bottom: -0.5rem;
   width: 2rem;
   height: 2px;
   background: #3b82f6;
@@ -1180,21 +1181,23 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .join-contact-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   margin: 0;
+  height: 100%;
 }
 
 .join-contact-item {
   display: grid;
-  grid-template-columns: 3rem minmax(4rem, 0.28fr) minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.75rem;
   align-items: center;
-  min-height: 4.2rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid #f3f4f6;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   background: #fafafa;
+  flex: 1;
 }
 
 .join-contact-item:last-child {
@@ -1347,14 +1350,14 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .recruit-box {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0;
+  grid-template-columns: minmax(14rem, 0.42fr) minmax(22rem, 1fr);
+  gap: 1rem;
   align-items: stretch;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #f3f4f6;
-  border-radius: 0.5rem;
-  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.65rem;
+  background: #fbfdff;
   overflow: hidden;
 }
 
@@ -1383,40 +1386,36 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   line-height: 1.5;
 }
 
-.join-members-panel {
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #f3f4f6;
-  border-right: 1px solid #f3f4f6;
-  padding: 0.75rem 1rem;
-}
-
-.join-members-panel h3 {
-  margin: 0 0 0.5rem;
-  color: #1f2937;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
 .dino-stage {
   position: relative;
   width: 100%;
-  height: 3.5rem;
-  margin-top: 1rem;
+  min-height: 7.2rem;
+  align-self: stretch;
   overflow: hidden;
-  background: #ffffff;
-  border: 1px solid #f3f4f6;
-  border-radius: 0.3rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .dino-ground {
   position: absolute;
+  left: 0.4rem;
+  right: 0.4rem;
+  bottom: 1.18rem;
+  height: 0;
+  border-bottom: 2px solid #7a7a7a;
+  opacity: 0.58;
+}
+
+.dino-ground::after {
+  content: "";
+  position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 1px;
-  background: #e5e7eb;
-  animation: dino-ground 0.6s linear infinite;
+  top: -0.25rem;
+  height: 0.28rem;
+  background: repeating-linear-gradient(90deg, transparent 0 1.4rem, #777 1.4rem 1.55rem, transparent 1.55rem 2.3rem);
+  animation: dino-ground 0.64s linear infinite;
 }
 
 .dino-runner,
@@ -1425,106 +1424,57 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   image-rendering: pixelated;
 }
 
-/* Chrome Dino - Authentic pixel dinosaur */
 .dino-runner {
-  left: 0.5rem;
-  bottom: 0;
-  width: 3.5rem;
-  height: 3.5rem;
+  --dino-size: clamp(4.2rem, 7.4vw, 5.8rem);
+  left: 0.8rem;
+  bottom: 1.18rem;
+  width: var(--dino-size);
+  height: var(--dino-size);
   color: #535353;
-  background: transparent;
-  box-shadow:
-    /* Top of head */
-    2.2rem 0rem 0 0 currentColor,
-    2.6rem 0rem 0 0 currentColor,
-    /* Face */
-    1.4rem -0.4rem 0 0 currentColor,
-    1.8rem -0.4rem 0 0 currentColor,
-    2.2rem -0.4rem 0 0 currentColor,
-    2.6rem -0.4rem 0 0 currentColor,
-    3rem -0.4rem 0 0 currentColor,
-    /* Eye white */
-    2.6rem -0.8rem 0 0 #fff,
-    /* Upper mouth and body */
-    0.6rem -0.8rem 0 0 currentColor,
-    1rem -0.8rem 0 0 currentColor,
-    1.4rem -0.8rem 0 0 currentColor,
-    1.8rem -0.8rem 0 0 currentColor,
-    2.2rem -0.8rem 0 0 currentColor,
-    /* Body */
-    0 -1.2rem 0 0 currentColor,
-    0.4rem -1.2rem 0 0 currentColor,
-    0.8rem -1.2rem 0 0 currentColor,
-    1.2rem -1.2rem 0 0 currentColor,
-    1.6rem -1.2rem 0 0 currentColor,
-    2rem -1.2rem 0 0 currentColor,
-    2.4rem -1.2rem 0 0 currentColor,
-    2.8rem -1.2rem 0 0 currentColor,
-    /* Arms */
-    1.2rem -1.6rem 0 0 currentColor,
-    1.6rem -1.6rem 0 0 currentColor,
-    2rem -1.6rem 0 0 currentColor,
-    /* Tail and upper legs */
-    3.2rem -1.6rem 0 0 currentColor,
-    3.6rem -1.6rem 0 0 currentColor,
-    0.4rem -2rem 0 0 currentColor,
-    0.8rem -2rem 0 0 currentColor,
-    1.2rem -2rem 0 0 currentColor,
-    /* Lower legs */
-    0.4rem -2.4rem 0 0 currentColor,
-    0.8rem -2.4rem 0 0 currentColor,
-    1.2rem -2.4rem 0 0 currentColor,
-    1.6rem -2.4rem 0 0 currentColor,
-    /* Feet */
-    0.2rem -2.8rem 0 0 currentColor,
-    0.6rem -2.8rem 0 0 currentColor,
-    1.4rem -2.8rem 0 0 currentColor,
-    1.8rem -2.8rem 0 0 currentColor;
-  animation: dino-jump 0.6s cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
+  background: currentColor;
+  clip-path: polygon(
+    43% 9%, 69% 9%, 69% 16%, 78% 16%, 78% 25%, 61% 25%, 61% 32%,
+    73% 32%, 73% 39%, 56% 39%, 56% 50%, 66% 50%, 66% 57%,
+    48% 57%, 48% 67%, 40% 67%, 40% 78%, 47% 78%, 47% 87%,
+    38% 87%, 38% 78%, 30% 78%, 30% 88%, 19% 88%, 19% 80%,
+    27% 80%, 27% 69%, 20% 69%, 20% 59%, 11% 65%, 11% 56%,
+    21% 48%, 29% 44%, 30% 33%, 35% 33%, 35% 20%, 43% 20%
+  );
+  animation: dino-jump 1.28s cubic-bezier(0.18, 0.74, 0.32, 1) infinite;
 }
 
-.dino-runner::after {
-  content: none;
+.dino-runner::before {
+  content: "";
+  position: absolute;
+  left: 59%;
+  top: 15%;
+  width: 7%;
+  height: 7%;
+  background: #fff;
 }
 
-/* Chrome Cactus */
 .dino-cactus {
-  right: -2rem;
-  bottom: 0;
-  width: 1rem;
-  height: 1.5rem;
+  --cactus-width: clamp(1.55rem, 2.6vw, 2rem);
+  right: calc(-1 * var(--cactus-width));
+  bottom: 1.18rem;
+  width: var(--cactus-width);
+  height: calc(var(--cactus-width) * 2.45);
   color: #535353;
-  box-shadow:
-    /* Main trunk */
-    0.4rem 0 0 0 currentColor,
-    0.8rem 0 0 0 currentColor,
-    0.4rem -0.4rem 0 0 currentColor,
-    0.8rem -0.4rem 0 0 currentColor,
-    0.4rem -0.8rem 0 0 currentColor,
-    0.8rem -0.8rem 0 0 currentColor,
-    0.4rem -1.2rem 0 0 currentColor,
-    0.8rem -1.2rem 0 0 currentColor,
-    0.4rem -1.6rem 0 0 currentColor,
-    0.8rem -1.6rem 0 0 currentColor,
-    0.6rem -2rem 0 0 currentColor,
-    1rem -2rem 0 0 currentColor,
-    /* Left arm */
-    0 -0.8rem 0 0 currentColor,
-    0 -1.2rem 0 0 currentColor,
-    -0.4rem -1rem 0 0 currentColor,
-    /* Right arm */
-    1.2rem -1.2rem 0 0 currentColor,
-    1.6rem -1.2rem 0 0 currentColor,
-    1.6rem -1.6rem 0 0 currentColor;
-  animation: cactus-run 3s linear infinite;
+  background: currentColor;
+  clip-path: polygon(
+    41% 0, 64% 0, 64% 35%, 82% 35%, 82% 20%, 100% 20%, 100% 51%,
+    64% 51%, 64% 100%, 41% 100%, 41% 62%, 0 62%, 0 31%, 18% 31%,
+    18% 46%, 41% 46%
+  );
+  animation: cactus-run 1.28s linear infinite;
 }
 
 @keyframes dino-jump {
-  0%, 100% {
+  0%, 18%, 100% {
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-1.8rem);
+  42%, 58% {
+    transform: translateY(calc(-1 * clamp(3.2rem, 5.4vw, 4.6rem)));
   }
 }
 
@@ -1533,7 +1483,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-10rem);
+    transform: translateX(calc(-100vw + 7rem));
   }
 }
 
@@ -1870,6 +1820,7 @@ select:focus {
   }
 
   .join-layout {
+    grid-template-columns: 1fr;
     flex-direction: column;
     gap: 0;
     width: min(100%, calc(100vw - 1.5rem));
@@ -1892,9 +1843,31 @@ select:focus {
     padding-bottom: 0;
   }
 
+  .join-contact-list {
+    height: auto;
+  }
+
+  .join-contact-item {
+    flex: none;
+    min-height: 4rem;
+  }
+
   .join-member-wall {
     grid-template-columns: repeat(5, 2.8rem);
     grid-auto-rows: 2.8rem;
+  }
+
+  .dino-stage {
+    min-height: 6rem;
+    margin-top: 1rem;
+  }
+
+  .dino-runner {
+    --dino-size: 4rem;
+  }
+
+  .dino-cactus {
+    --cactus-width: 1.45rem;
   }
 
   .join-page {
@@ -1909,39 +1882,6 @@ select:focus {
   .join-hero h1 {
     font-size: 2.4rem;
   }
-
-  .join-member-wall {
-    grid-template-columns: repeat(5, 2.6rem);
-    grid-auto-rows: 2.6rem;
-  }
-
-  .dino-stage {
-    height: 3rem;
-  }
-
-  .dino-runner {
-    width: 2.8rem;
-    height: 2.8rem;
-  }
-
-  .dino-cactus {
-    width: 0.8rem;
-    height: 1.2rem;
-  }
-
-  .join-slogan {
-    font-size: 1rem;
-  }
-
-  .join-intro {
-    font-size: 0.9rem;
-  }
-
-  .join-info h2 {
-    font-size: 1.3rem;
-  }
-
-  .activity-feed-item img,
   .activity-feed-item div {
     grid-column: auto;
     grid-row: auto;
@@ -1980,5 +1920,19 @@ select:focus {
   .join-member-more,
   .join-member-placeholder {
     width: 2.45rem;
+  }
+
+  .dino-stage {
+    height: 3rem;
+  }
+
+  .dino-runner {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .dino-cactus {
+    width: 1rem;
+    height: 1.4rem;
   }
 }
