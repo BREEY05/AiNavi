@@ -291,8 +291,6 @@ function renderJoin() {
   $("[data-join-address]").textContent = join.address;
   $("[data-join-email]").textContent = join.email;
   $("[data-join-phone]").textContent = join.phone;
-  $("[data-join-recruit-title]").textContent = join.recruitTitle;
-  $("[data-join-recruit-info]").innerHTML = ZH_SITE.escapeHtml(join.recruitInfo).replace(/\n/g, "<br>");
   $("[data-join-members]").innerHTML = memberTiles.length ? memberTiles.join("") : `<span class="join-member-empty">成员头像将在这里展示</span>`;
 }
 
