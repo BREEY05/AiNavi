@@ -269,7 +269,7 @@ function renderActivitiesPage() {
 function renderJoin() {
   if (!document.body.matches("[data-page='join']")) return;
   const join = siteContent.join;
-  const visualImage = join.visualImage || siteContent.logo;
+  const visualImage = join.visualImage && join.visualImage !== "assets/zhihang-logo.png" ? join.visualImage : siteContent.logo;
   const memberImages = (siteContent.memberProfiles || []).map((item) => item.image).filter(Boolean);
   const visibleMembers = memberImages.slice(0, 15);
   const hiddenMembers = memberImages.slice(15);
