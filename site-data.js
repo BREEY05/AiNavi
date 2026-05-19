@@ -123,6 +123,7 @@ const ZH_SITE = (() => {
     join: {
       title: "加入我们",
       subtitle: "欢迎加入智航AI协会，与我们一起探索人工智能的无限可能",
+      visualImage: "assets/zhihang-logo.png",
       address: "学校计算机学院 A 栋 301 室",
       email: "info@zhihangai.org",
       phone: "010-12345678",

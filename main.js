@@ -269,6 +269,7 @@ function renderActivitiesPage() {
 function renderJoin() {
   if (!document.body.matches("[data-page='join']")) return;
   const join = siteContent.join;
+  const visualImage = join.visualImage || siteContent.logo;
   const memberImages = (siteContent.memberProfiles || []).map((item) => item.image).filter(Boolean);
   const visibleMembers = memberImages.slice(0, 15);
   const hiddenMembers = memberImages.slice(15);
@@ -285,8 +286,8 @@ function renderJoin() {
     `);
   }
   $("[data-join-title]").textContent = join.title;
-  $("[data-join-subtitle]").textContent = join.subtitle;
-  $("[data-join-logo]").style.backgroundImage = `url("${siteContent.logo}")`;
+  $("[data-join-subtitle]").innerHTML = highlight(join.subtitle);
+  $("[data-join-visual]").src = visualImage;
   $("[data-join-intro]").textContent = join.intro;
   $("[data-join-address]").textContent = join.address;
   $("[data-join-email]").textContent = join.email;

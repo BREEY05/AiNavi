@@ -45,7 +45,7 @@ function fillForms() {
 
   const join = $("[data-panel='join']");
   Object.keys(data.join).forEach((key) => {
-    if (join.elements[key]) join.elements[key].value = data.join[key];
+    if (join.elements[key] && join.elements[key].type !== "file") join.elements[key].value = data.join[key];
   });
 }
 
@@ -411,8 +411,12 @@ function bind() {
     event.preventDefault();
     const form = event.currentTarget;
     Object.keys(data.join).forEach((key) => {
-      if (form.elements[key]) data.join[key] = form.elements[key].value.trim();
+      if (form.elements[key] && form.elements[key].type !== "file") data.join[key] = form.elements[key].value.trim();
     });
+    if (form.elements.visualImage.files[0]) {
+      data.join.visualImage = await ZH_SITE.uploadImage(form.elements.visualImage.files[0]);
+      form.elements.visualImage.value = "";
+    }
     await save();
   });
 

@@ -9,24 +9,39 @@
 <body data-page="join">
   <div class="site-shell">
     <header class="site-header">
-      <a class="brand" href="index.html"><span class="brand-logo" data-logo></span><span data-text="siteName">智航AI协会</span></a>
+      <a class="brand" href="index.html">
+        <span class="brand-logo" data-logo></span>
+        <span class="brand-copy"><strong data-text="siteName">智航AI协会</strong><small>ZHIHANG AI ASSOCIATION</small></span>
+      </a>
       <nav class="main-nav"><a href="index.html">首页</a><a href="about.html">关于我们</a><a href="members.html">社团风采</a><a href="projects.html">项目展示</a><a href="activities.html">近期活动</a><a class="active" href="join.html">加入我们</a></nav>
       <button class="secret-logo-button" type="button" data-secret-login aria-label="隐藏入口"><span class="brand-logo" data-logo></span></button>
       <button class="menu-button" type="button" data-menu-toggle aria-label="展开导航"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </header>
-    <main class="sub-page join-page">
+    <main class="join-page">
       <section class="join-hero">
-        <span class="join-page-logo" data-join-logo></span>
-        <h1 data-join-title></h1>
-        <p data-join-subtitle></p>
-        <span class="join-title-mark" aria-hidden="true"></span>
+        <div class="join-hero-inner">
+          <figure class="join-visual">
+            <img data-join-visual alt="加入我们主视觉">
+          </figure>
+          <div class="join-hero-copy">
+            <h1 data-join-title></h1>
+            <p data-join-subtitle></p>
+            <div class="join-highlights" aria-label="协会优势">
+              <span><b>♙</b><strong>优秀的成员群体</strong><small>结识志同道合的伙伴</small></span>
+              <span><b>&lt;/&gt;</b><strong>前沿的技术探索</strong><small>掌握最新AI技术动态</small></span>
+              <span><b>☼</b><strong>丰富的项目实践</strong><small>提升解决实际问题的能力</small></span>
+              <span><b>♕</b><strong>多元的成长机会</strong><small>竞赛、分享与展示平台</small></span>
+            </div>
+          </div>
+        </div>
       </section>
+
       <section class="join-layout">
-        <article class="join-info">
-          <h2>联系信息</h2>
+        <article class="join-info join-contact-panel">
+          <h2>联系我们</h2>
           <dl class="join-contact-list">
             <div class="join-contact-item">
-              <dt><span class="join-contact-icon" aria-hidden="true">⌂</span><span>地址</span></dt>
+              <dt><span class="join-contact-icon" aria-hidden="true">⌖</span><span>地址</span></dt>
               <dd data-join-address></dd>
             </div>
             <div class="join-contact-item">
@@ -39,7 +54,7 @@
             </div>
           </dl>
         </article>
-        <article class="join-info">
+        <article class="join-info join-member-panel">
           <h2>我们的成员</h2>
           <div class="join-member-wall" data-join-members></div>
           <strong class="join-slogan">一起创造 · 共同成长</strong>
