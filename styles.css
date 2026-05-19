@@ -1234,7 +1234,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   grid-template-columns: minmax(24rem, 0.95fr) minmax(36rem, 1.65fr);
   gap: 2.25rem;
   width: min(104rem, calc(100vw - 5.2rem));
-  margin: -0.2rem auto 0.7rem;
+  margin: 1.2rem auto 0.7rem;
   padding: 1.65rem 2.1rem 1.35rem;
   border: 1px solid rgba(204, 226, 251, 0.95);
   border-radius: 1.1rem;
