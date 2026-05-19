@@ -1152,7 +1152,10 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   place-items: center;
   margin: 0;
 }
-
+.join-visual img {
+    position: relative;
+    top: -20px; /* 往上提 20 像素 */
+}
 .join-visual img {
   width: min(21.8rem, 29vw);
   aspect-ratio: 1;
