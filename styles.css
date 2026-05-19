@@ -1550,7 +1550,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     27% 80%, 27% 69%, 20% 69%, 20% 59%, 11% 65%, 11% 56%,
     21% 48%, 29% 44%, 30% 33%, 35% 33%, 35% 20%, 43% 20%
   );
-  animation: dino-jump 1.28s cubic-bezier(0.18, 0.74, 0.32, 1) infinite;
+  animation: dino-jump 2.1s ease-in-out infinite;
 }
 
 .dino-runner::before {
@@ -1576,15 +1576,18 @@ body[data-page="join"] .secret-logo-button .brand-logo {
     64% 51%, 64% 100%, 41% 100%, 41% 62%, 0 62%, 0 31%, 18% 31%,
     18% 46%, 41% 46%
   );
-  animation: cactus-run 1.28s linear infinite;
+  animation: cactus-run 2.1s linear infinite;
 }
 
 @keyframes dino-jump {
-  0%, 18%, 100% {
+  0%, 31%, 68%, 100% {
     transform: translateY(0);
   }
-  42%, 58% {
-    transform: translateY(calc(-1 * clamp(1.45rem, 2.5vw, 1.95rem)));
+  41%, 55% {
+    transform: translateY(calc(-1 * clamp(1.65rem, 2.8vw, 2.15rem)));
+  }
+  48% {
+    transform: translateY(calc(-1 * clamp(1.9rem, 3.1vw, 2.38rem)));
   }
 }
 
