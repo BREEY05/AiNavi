@@ -1580,15 +1580,19 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 @keyframes dino-jump {
-  0%, 31%, 68%, 100% {
+  /* 从 0% 到 75% 的时间里，恐龙都老老实实待在地面上 */
+  0%, 75%, 100% {
     transform: translateY(0);
   }
-  41%, 55% {
+  /* 80% 的时候迅速起跳到达最高点 */
+  80% {
     transform: translateY(calc(-1 * clamp(1.65rem, 2.8vw, 2.15rem)));
   }
-  48% {
-    transform: translateY(calc(-1 * clamp(1.9rem, 3.1vw, 2.38rem)));
+  /* 85% 的时候依然在最高点（稍微滞空一下） */
+  90% {
+    transform: translateY(calc(-1 * clamp(1.65rem, 2.8vw, 2.15rem)));
   }
+  /* 90% 到 100% 快速落回地面，然后无缝衔接下一轮动画 */
 }
 
 @keyframes cactus-run {
