@@ -1687,8 +1687,9 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 .detail-image {
   width: 100%;
   margin-bottom: 1.2rem;
-  aspect-ratio: 16 / 8;
-  object-fit: cover;
+  max-height: min(62vh, 560px);
+  aspect-ratio: auto;
+  object-fit: contain;
   background: #eef5ff;
   border-radius: 0.7rem;
 }
