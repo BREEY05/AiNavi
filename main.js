@@ -55,6 +55,13 @@ function renderShell() {
   $$("[data-text='siteName']").forEach((node) => {
     node.textContent = siteContent.siteName;
   });
+  if (!$("[data-site-footer]")) {
+    document.body.insertAdjacentHTML("beforeend", `
+      <footer class="site-footer" data-site-footer>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">渝ICP备2026009718号-1</a>
+      </footer>
+    `);
+  }
 }
 
 function renderHome() {
