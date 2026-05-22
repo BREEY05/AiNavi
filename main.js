@@ -47,6 +47,21 @@ function chartColor(index) {
   return ["#86aefb", "#8fd6c2", "#f5bf82", "#b7a5f3", "#8ecfe5", "#ead98d"][index % 6];
 }
 
+function dateRank(value) {
+  const text = String(value || "");
+  const full = text.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (full) return Number(full[1]) * 10000 + Number(full[2]) * 100 + Number(full[3]);
+  const short = text.match(/(\d{1,2})[-/.](\d{1,2})/);
+  if (short) return Number(short[1]) * 100 + Number(short[2]);
+  return 0;
+}
+
+function byNewest(items) {
+  return (items || [])
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => dateRank(b.item.date) - dateRank(a.item.date) || b.index - a.index);
+}
+
 function renderShell() {
   applyTheme();
   $$("[data-logo]").forEach((node) => {
@@ -72,7 +87,7 @@ function renderHome() {
   $("[data-text='heroLine']").textContent = siteContent.heroLine;
   $("[data-text='clubIntro']").textContent = siteContent.clubIntro;
 
-  $("[data-list='announcements']").innerHTML = siteContent.announcements.slice(0, 4).map((item, index) => `
+  $("[data-list='announcements']").innerHTML = byNewest(siteContent.announcements).slice(0, 4).map(({ item, index }) => `
     <button class="notice-item" type="button" data-open-detail="announcements" data-index="${index}">
       <span class="tag ${item.type || "info"}">${ZH_SITE.escapeHtml(item.tag)}</span>
       <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
@@ -308,8 +323,9 @@ function openDetail(type, index) {
   const item = siteContent[type][index];
   if (!item || !$("[data-detail-modal]")) return;
   const isActivity = type === "activities";
+  const image = item.image ? `<img class="detail-image" src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">` : "";
   $("[data-detail-content]").innerHTML = `
-    ${isActivity ? `<img class="detail-image" src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">` : ""}
+    ${image}
     <div class="detail-kicker">${isActivity ? "近期活动" : "最新公告"}</div>
     <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
     <div class="detail-meta">
@@ -336,12 +352,12 @@ function openAchievement(index) {
 function openList(type) {
   if (!$("[data-detail-modal]")) return;
   const title = type === "activities" ? "近期活动" : "最新公告";
-  const items = siteContent[type] || [];
+  const items = type === "announcements" ? byNewest(siteContent[type]) : (siteContent[type] || []).map((item, index) => ({ item, index }));
   $("[data-detail-content]").innerHTML = `
     <div class="detail-kicker">全部内容</div>
     <h2>${title}</h2>
     <div class="detail-list">
-      ${items.map((item, index) => `
+      ${items.map(({ item, index }) => `
         <button type="button" data-open-detail="${type}" data-index="${index}">
           <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
           <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` · ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>

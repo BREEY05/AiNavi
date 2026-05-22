@@ -97,7 +97,9 @@ function card(type, item, index) {
         ${field("公告标题", "title", item.title, "full")}
         ${field("日期", "date", item.date)}
         ${textarea("公告详情", "detail", item.detail)}
+        ${imageInput("公告图片", "image")}
       </div>
+      ${item.image ? `<img class="thumb-preview" src="${item.image}" alt="公告图片预览">` : ""}
     `,
     aboutParagraphs: textarea("段落", "text", item.text),
     aboutStats: `
@@ -276,7 +278,7 @@ function switchPanel(name) {
 
 function newItem(type) {
   const map = {
-    announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。" },
+    announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。", image: "" },
     achievements: { title: "新的成果照片", note: "照片展示", image: ZH_SITE.placeholder("成果照片", "#1768ff") },
     majorChart: { label: "新专业", value: 10, color: "#86aefb" },
     gradeChart: { label: "新年级", value: 10, color: "#86aefb" },
