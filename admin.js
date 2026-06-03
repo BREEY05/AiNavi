@@ -3,6 +3,8 @@ if (sessionStorage.getItem("zhihang-admin-auth") !== "1") {
 }
 
 let data = ZH_SITE.load();
+const collapsedEditors = new Set(["announcements", "activities"]);
+const openEditors = new Set();
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
@@ -68,8 +70,8 @@ function renderEditors() {
 function renderEditor(type) {
   const root = $(`[data-editor='${type}']`);
   if (!root) return;
-  const items = getItems(type);
-  root.innerHTML = items.map((item, index) => card(type, item, index)).join("");
+  const items = getEditorItems(type);
+  root.innerHTML = items.map(({ item, index }, position) => card(type, item, index, position)).join("");
 }
 
 function getItems(type) {
@@ -80,9 +82,30 @@ function getItems(type) {
   return data[type] || [];
 }
 
-function card(type, item, index) {
-  const draggable = ["achievements", "memberProfiles", "clubMoments", "projects", "activities", "majorChart", "gradeChart"].includes(type);
+function getEditorItems(type) {
+  const items = getItems(type).map((item, index) => ({ item, index }));
+  if (["announcements", "activities"].includes(type)) {
+    return items.sort((a, b) => dateRank(b.item.date) - dateRank(a.item.date) || b.index - a.index);
+  }
+  return items;
+}
+
+function dateRank(value) {
+  const text = String(value || "");
+  const full = text.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (full) return Number(full[1]) * 10000 + Number(full[2]) * 100 + Number(full[3]);
+  const short = text.match(/(\d{1,2})[-/.](\d{1,2})/);
+  if (short) return Number(short[1]) * 100 + Number(short[2]);
+  return 0;
+}
+
+function card(type, item, index, position = index) {
+  const draggable = ["achievements", "memberProfiles", "clubMoments", "projects", "majorChart", "gradeChart"].includes(type);
   const removeable = !["features", "aboutParagraphs", "aboutStats"].includes(type);
+  const isCollapsedEditor = collapsedEditors.has(type);
+  const editorKey = `${type}:${index}`;
+  const isOpen = !isCollapsedEditor || openEditors.has(editorKey);
+  const summary = isCollapsedEditor ? ` · ${ZH_SITE.escapeHtml(item.title || "")}${item.date ? ` (${ZH_SITE.escapeHtml(item.date)})` : ""}` : "";
   const body = {
     features: `
       <div class="editor-grid">
@@ -172,10 +195,11 @@ function card(type, item, index) {
   return `
     <section class="editor-card" ${draggable ? "draggable='true'" : ""} data-type="${type}" data-index="${index}">
       <div class="editor-card-head">
-        <span>${draggable ? "↕ " : ""}${index + 1}. ${labelName(type)}</span>
+        <span>${draggable ? "↕ " : ""}${position + 1}. ${labelName(type)}${summary}</span>
+        ${isCollapsedEditor ? `<button class="ghost-button" type="button" data-toggle-editor="${type}" data-index="${index}">${isOpen ? "收起" : "编辑"}</button>` : ""}
         ${removeable ? `<button class="danger-button" type="button" data-remove="${type}" data-index="${index}">删除</button>` : ""}
       </div>
-      ${body}
+      <div class="editor-card-body" ${isOpen ? "" : "hidden"}>${body}</div>
     </section>
   `;
 }

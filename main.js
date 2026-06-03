@@ -102,7 +102,7 @@ function renderHome() {
     </div>
   `).join("");
 
-  $("[data-list='activities']").innerHTML = siteContent.activities.slice(0, 3).map((item, index) => `
+  $("[data-list='activities']").innerHTML = byNewest(siteContent.activities).slice(0, 3).map(({ item, index }) => `
     <button class="activity-item" type="button" data-open-detail="activities" data-index="${index}">
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <div>
@@ -276,7 +276,7 @@ function renderProjects() {
 
 function renderActivitiesPage() {
   if (!document.body.matches("[data-page='activities']")) return;
-  $("[data-activity-feed]").innerHTML = siteContent.activities.map((item, index) => `
+  $("[data-activity-feed]").innerHTML = byNewest(siteContent.activities).map(({ item, index }) => `
     <button class="activity-feed-item" type="button" data-open-detail="activities" data-index="${index}">
       <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
       <div>
@@ -352,7 +352,7 @@ function openAchievement(index) {
 function openList(type) {
   if (!$("[data-detail-modal]")) return;
   const title = type === "activities" ? "近期活动" : "最新公告";
-  const items = type === "announcements" ? byNewest(siteContent[type]) : (siteContent[type] || []).map((item, index) => ({ item, index }));
+  const items = ["announcements", "activities"].includes(type) ? byNewest(siteContent[type]) : (siteContent[type] || []).map((item, index) => ({ item, index }));
   $("[data-detail-content]").innerHTML = `
     <div class="detail-kicker">全部内容</div>
     <h2>${title}</h2>
