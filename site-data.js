@@ -1,4 +1,4 @@
-const ZH_SITE = (() => {
+﻿const ZH_SITE = (() => {
   const STORAGE_KEY = "zhihang-ai-content-v3";
   const LOGIN_CODE_PRIMARY = "heyiwei";
   const LOGIN_CODE_SECONDARY = "qnmd";
@@ -61,10 +61,10 @@ const ZH_SITE = (() => {
       { title: "成果照片三", image: placeholder("成果照片三", "#705cff"), note: "照片展示" }
     ],
     announcements: [
-      { tag: "通知", type: "info", title: "智航AI协会例会通知（第12周）", date: "05-20", detail: "本周例会将围绕近期项目进度、技术分享安排和成员分组进行说明，请各位成员准时参加。" },
-      { tag: "活动", type: "activity", title: "【技术分享会】大模型在实际项目中的应用", date: "05-18", detail: "本次分享会将结合真实项目案例，介绍大模型调用、提示词设计、知识库应用与落地流程。" },
-      { tag: "竞赛", type: "competition", title: "校内AI算法大赛即将开启，欢迎报名！", date: "05-15", detail: "校内AI算法大赛报名即将开始，协会将组织赛前培训、组队匹配和资料分享。" },
-      { tag: "分享", type: "share", title: "机器学习前沿技术分享回顾", date: "05-08", detail: "本次回顾整理了前沿模型、学习路线和实践建议，便于成员课后继续学习。" }
+      { tag: "通知", type: "info", title: "智航AI协会例会通知（第12周）", date: "05-20", detail: "本周例会将围绕近期项目进度、技术分享安排和成员分组进行说明，请各位成员准时参加。", link: "" },
+      { tag: "活动", type: "activity", title: "【技术分享会】大模型在实际项目中的应用", date: "05-18", detail: "本次分享会将结合真实项目案例，介绍大模型调用、提示词设计、知识库应用与落地流程。", link: "" },
+      { tag: "竞赛", type: "competition", title: "校内AI算法大赛即将开启，欢迎报名！", date: "05-15", detail: "校内AI算法大赛报名即将开始，协会将组织赛前培训、组队匹配和资料分享。", link: "" },
+      { tag: "分享", type: "share", title: "机器学习前沿技术分享回顾", date: "05-08", detail: "本次回顾整理了前沿模型、学习路线和实践建议，便于成员课后继续学习。", link: "" }
     ],
     about: {
       title: "关于我们",
@@ -116,9 +116,9 @@ const ZH_SITE = (() => {
       { title: "机器学习竞赛训练包", category: "竞赛训练", award: "算法实践作品优秀奖", image: placeholder("机器学习竞赛训练包", "#705cff"), detail: "整理常用算法模板、特征工程方法和赛题复盘，帮助成员快速进入竞赛状态。" }
     ],
     activities: [
-      { title: "技术分享会：大模型在实际项目中的应用", date: "05-18 14:00", place: "教二 301", image: placeholder("技术分享会", "#1768ff"), detail: "面向有基础的同学，讲解大模型在课程项目、智能问答和数据分析中的实际应用。" },
-      { title: "机器学习算法工作坊", date: "05-25 15:00", place: "实验楼 204", image: placeholder("算法工作坊", "#244bd2"), detail: "通过实操方式复习常用机器学习算法，并完成一个小型预测任务。" },
-      { title: "社团例会（第12周）", date: "05-21 19:00", place: "教二 302", image: placeholder("社团例会", "#0aa878"), detail: "同步协会近期安排、项目组进度和后续活动计划。" }
+      { title: "技术分享会：大模型在实际项目中的应用", tag: "技术分享", type: "share", date: "05-18 14:00", place: "教二 301", image: placeholder("技术分享会", "#1768ff"), detail: "面向有基础的同学，讲解大模型在课程项目、智能问答和数据分析中的实际应用。" },
+      { title: "机器学习算法工作坊", tag: "工作坊", type: "activity", date: "05-25 15:00", place: "实验楼 204", image: placeholder("算法工作坊", "#244bd2"), detail: "通过实操方式复习常用机器学习算法，并完成一个小型预测任务。" },
+      { title: "社团例会（第12周）", tag: "例会", type: "info", date: "05-21 19:00", place: "教二 302", image: placeholder("社团例会", "#0aa878"), detail: "同步协会近期安排、项目组进度和后续活动计划。" }
     ],
     join: {
       title: "加入我们",

@@ -1,4 +1,4 @@
-if (sessionStorage.getItem("zhihang-admin-auth") !== "1") {
+﻿if (sessionStorage.getItem("zhihang-admin-auth") !== "1") {
   window.location.href = "index.html";
 }
 
@@ -118,6 +118,7 @@ function card(type, item, index, position = index) {
         ${field("标签", "tag", item.tag)}
         ${select("类型", "type", item.type, [["info", "通知蓝"], ["activity", "活动绿"], ["competition", "竞赛橙"], ["share", "分享紫"]])}
         ${field("公告标题", "title", item.title, "full")}
+        ${field("链接（可选）", "link", item.link, "full")}
         ${field("日期", "date", item.date)}
         ${textarea("公告详情", "detail", item.detail)}
         ${imageInput("公告图片", "image")}
@@ -184,6 +185,8 @@ function card(type, item, index, position = index) {
       <div class="editor-grid">
         ${field("活动标题", "title", item.title, "full")}
         ${field("时间", "date", item.date)}
+        ${field("标签", "tag", item.tag)}
+        ${select("类型", "type", item.type, [["activity", "活动绿"], ["info", "通知蓝"], ["competition", "竞赛橙"], ["share", "分享紫"]])}
         ${field("地点", "place", item.place)}
         ${textarea("活动详情", "detail", item.detail)}
         ${imageInput("活动图片", "image")}
@@ -302,14 +305,15 @@ function switchPanel(name) {
 
 function newItem(type) {
   const map = {
-    announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。", image: "" },
+    announcements: { tag: "通知", type: "info", title: "新的公告标题", date: "05-30", detail: "这里填写公告详情。", image: "", link: "" },
     achievements: { title: "新的成果照片", note: "照片展示", image: ZH_SITE.placeholder("成果照片", "#1768ff") },
     majorChart: { label: "新专业", value: 10, color: "#86aefb" },
     gradeChart: { label: "新年级", value: 10, color: "#86aefb" },
     memberProfiles: { name: "新成员", title: "自定义头衔/职称", awards: "这里填写获奖情况。", image: ZH_SITE.placeholder("成员头像", "#1768ff") },
     clubMoments: { title: "新的活动风采", text: "这里填写活动照片下方文字。", image: ZH_SITE.placeholder("活动风采", "#19a680") },
     projects: { title: "新的项目", category: "项目分类", award: "填写获得的奖项", image: ZH_SITE.placeholder("项目图片", "#0aa878"), detail: "这里填写项目介绍。" },
-    activities: { title: "新的活动标题", date: "05-30 19:00", place: "待定", image: ZH_SITE.placeholder("新的活动", "#1768ff"), detail: "这里填写活动详情。" }
+    activities: {
+    tag: "活动", type: "activity", title: "新的活动标题", date: "05-30 19:00", place: "待定", image: ZH_SITE.placeholder("新的活动", "#1768ff"), detail: "这里填写活动详情。" }
   };
   return map[type];
 }
@@ -447,15 +451,32 @@ function bind() {
   });
 
   document.addEventListener("click", (event) => {
+    const toggle = event.target.closest("[data-toggle-editor]");
+    if (toggle) {
+      const key = `${toggle.dataset.toggleEditor}:${toggle.dataset.index}`;
+      if (openEditors.has(key)) {
+        openEditors.delete(key);
+      } else {
+        openEditors.add(key);
+      }
+      renderEditor(toggle.dataset.toggleEditor);
+      return;
+    }
+
     const add = event.target.closest("[data-add]");
     if (add) {
       const list = getItems(add.dataset.add);
-      list.push(newItem(add.dataset.add));
+      const item = newItem(add.dataset.add);
+      list.push(item);
+      openEditors.add(`${add.dataset.add}:${list.length - 1}`);
       renderEditor(add.dataset.add);
+      return;
     }
+
     const remove = event.target.closest("[data-remove]");
     if (remove) {
       getItems(remove.dataset.remove).splice(Number(remove.dataset.index), 1);
+      openEditors.clear();
       renderEditor(remove.dataset.remove);
     }
   });

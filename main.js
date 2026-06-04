@@ -92,6 +92,7 @@ function renderHome() {
       <span class="tag ${item.type || "info"}">${ZH_SITE.escapeHtml(item.tag)}</span>
       <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
       <time>${ZH_SITE.escapeHtml(item.date)}</time>
+      ${item.link ? `<a href="${ZH_SITE.escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" style="grid-column:2;color:var(--blue);font-size:0.88rem;" onclick="event.stopPropagation()">链接 →</a>` : ""}
     </button>
   `).join("");
 
@@ -274,6 +275,21 @@ function renderProjects() {
   `).join("");
 }
 
+function renderAnnouncementsPage() {
+  if (!document.body.matches("[data-page='announcements']")) return;
+  $("[data-announcement-feed]").innerHTML = byNewest(siteContent.announcements).map(({ item, index }) => `
+    <button class="activity-feed-item" type="button" data-open-detail="announcements" data-index="${index}">
+      ${item.image ? `<img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">` : ""}
+      <div>
+        <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
+        <p class="feed-meta"><span class="tag ${item.type || "info"}">${ZH_SITE.escapeHtml(item.tag || "通知")}</span> ${ZH_SITE.escapeHtml(item.date || "")}</p>
+        <p>${ZH_SITE.escapeHtml(item.detail)}</p>
+        ${item.link ? `<p style="margin-top:0.5rem;"><a href="${ZH_SITE.escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color:var(--blue);font-weight:700;">查看相关链接 →</a></p>` : ""}
+      </div>
+    </button>
+  `).join("");
+}
+
 function renderActivitiesPage() {
   if (!document.body.matches("[data-page='activities']")) return;
   $("[data-activity-feed]").innerHTML = byNewest(siteContent.activities).map(({ item, index }) => `
@@ -329,10 +345,13 @@ function openDetail(type, index) {
     <div class="detail-kicker">${isActivity ? "近期活动" : "最新公告"}</div>
     <h2>${ZH_SITE.escapeHtml(item.title)}</h2>
     <div class="detail-meta">
+
+      <span class="tag ${item.type || (isActivity ? "activity" : "info")}" style="display:inline-flex;padding:0 0.55rem;height:auto;line-height:1.8;">${ZH_SITE.escapeHtml(item.tag || (isActivity ? "活动" : "通知"))}</span>
       <span>${ZH_SITE.escapeHtml(item.date || "")}</span>
-      ${isActivity ? `<span>${ZH_SITE.escapeHtml(item.place || "")}</span>` : `<span>${ZH_SITE.escapeHtml(item.tag || "")}</span>`}
+      ${isActivity ? `<span>${ZH_SITE.escapeHtml(item.place || "")}</span>` : ""}
     </div>
     <p>${ZH_SITE.escapeHtml(item.detail || "暂无详情。")}</p>
+    ${isActivity ? "" : (item.link ? `<p><a href="${ZH_SITE.escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:700;">查看相关链接 →</a></p>` : "")}
   `;
   $("[data-detail-modal]").hidden = false;
 }
@@ -360,7 +379,7 @@ function openList(type) {
       ${items.map(({ item, index }) => `
         <button type="button" data-open-detail="${type}" data-index="${index}">
           <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
-          <span>${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` · ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
+          <span><span class="tag ${item.type || "info"}" style="display:inline-flex;padding:0 0.45rem;height:1.6rem;font-size:0.82rem;">${ZH_SITE.escapeHtml(item.tag || (type === "activities" ? "活动" : "通知"))}</span> ${ZH_SITE.escapeHtml(item.date || "")}${type === "activities" ? ` · ${ZH_SITE.escapeHtml(item.place || "")}` : ""}</span>
         </button>
       `).join("")}
     </div>
@@ -493,6 +512,7 @@ function renderAll() {
   renderAbout();
   renderMembers();
   renderProjects();
+  renderAnnouncementsPage();
   renderActivitiesPage();
   renderJoin();
 }
