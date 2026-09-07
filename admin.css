@@ -24,6 +24,52 @@
   gap: 0.75rem;
 }
 
+.account-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.account-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1fr) minmax(13rem, 1.2fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: #fbfdff;
+}
+
+.account-row > div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.account-row small,
+.account-row span:not(.account-status) {
+  color: var(--muted);
+}
+
+.account-status {
+  width: fit-content;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.account-status.pending { color: #a56005; background: #fff4db; }
+.account-status.approved { color: #127554; background: #e6f8f0; }
+.account-status.disabled,
+.account-status.rejected { color: #b52c37; background: #ffecee; }
+
+.account-actions {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 .ghost-button,
 .danger-button {
   display: inline-flex;
@@ -267,5 +313,13 @@ label {
     align-items: flex-start;
     flex-direction: column;
     padding: 1rem;
+  }
+
+  .account-row {
+    grid-template-columns: 1fr;
+  }
+
+  .account-actions {
+    justify-content: flex-start;
   }
 }

@@ -1,8 +1,5 @@
-﻿if (sessionStorage.getItem("zhihang-admin-auth") !== "1") {
-  window.location.href = "index.html";
-}
-
 let data = ZH_SITE.load();
+let currentUser = null;
 const collapsedEditors = new Set(["announcements", "activities"]);
 const openEditors = new Set();
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -17,7 +14,8 @@ const titles = {
   members: "社团风采",
   projects: "项目展示",
   activities: "近期活动",
-  join: "加入我们"
+  join: "加入我们",
+  accounts: "账号管理"
 };
 
 function applyTheme() {
@@ -298,9 +296,32 @@ function showState(message) {
 }
 
 function switchPanel(name) {
+  if (name === "accounts" && currentUser?.role !== "owner") return;
   $$("[data-section]").forEach((button) => button.classList.toggle("active", button.dataset.section === name));
   $$("[data-panel]").forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === name));
   $("[data-admin-title]").textContent = titles[name];
+  if (name === "accounts") renderAccounts();
+}
+
+function statusLabel(status) {
+  return { pending: "待审批", approved: "已批准", disabled: "已禁用", rejected: "已拒绝" }[status] || status;
+}
+
+async function renderAccounts() {
+  const root = $("[data-account-list]");
+  root.innerHTML = "<p class='admin-tip'>正在读取账号列表…</p>";
+  try {
+    const response = await fetch("/api/accounts", { cache: "no-store" });
+    const users = await response.json();
+    if (!response.ok) throw new Error(users.error || "读取账号列表失败。");
+    root.innerHTML = users.map((user) => `
+      <article class="account-row">
+        <div><strong>${ZH_SITE.escapeHtml(user.qq)}</strong><span>${ZH_SITE.escapeHtml(user.role === "owner" ? "所有者" : "管理员")}</span></div>
+        <div><span class="account-status ${ZH_SITE.escapeHtml(user.status)}">${ZH_SITE.escapeHtml(statusLabel(user.status))}</span><small>注册于 ${new Date(user.created_at).toLocaleString("zh-CN")}</small></div>
+        ${user.role === "owner" ? "" : `<div class="account-actions"><button class="ghost-button" type="button" data-account-status="approved" data-account-qq="${ZH_SITE.escapeHtml(user.qq)}">批准</button><button class="ghost-button" type="button" data-account-status="pending" data-account-qq="${ZH_SITE.escapeHtml(user.qq)}">待定</button><button class="danger-button" type="button" data-account-status="disabled" data-account-qq="${ZH_SITE.escapeHtml(user.qq)}">禁用</button></div>`}
+      </article>
+    `).join("") || "<p class='admin-tip'>尚无注册账号。</p>";
+  } catch (error) { root.innerHTML = `<p class="form-message">${ZH_SITE.escapeHtml(error.message)}</p>`; }
 }
 
 function newItem(type) {
@@ -348,8 +369,7 @@ function bind() {
   $$("[data-section]").forEach((button) => button.addEventListener("click", () => switchPanel(button.dataset.section)));
   $("[data-preview]").addEventListener("click", () => { window.location.href = "index.html"; });
   $("[data-logout]").addEventListener("click", () => {
-    sessionStorage.removeItem("zhihang-admin-auth");
-    window.location.href = "index.html";
+    fetch("/api/auth/logout", { method: "POST" }).finally(() => { window.location.href = "login.html"; });
   });
 
   $("[data-panel='basic']").addEventListener("submit", async (event) => {
@@ -451,6 +471,18 @@ function bind() {
   });
 
   document.addEventListener("click", (event) => {
+    const accountAction = event.target.closest("[data-account-status]");
+    if (accountAction) {
+      fetch(`/api/accounts/${encodeURIComponent(accountAction.dataset.accountQq)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: accountAction.dataset.accountStatus })
+      })
+        .then(async (response) => { const result = await response.json(); if (!response.ok) throw new Error(result.error); return result; })
+        .then(() => renderAccounts())
+        .catch((error) => showState(error.message));
+      return;
+    }
     const toggle = event.target.closest("[data-toggle-editor]");
     if (toggle) {
       const key = `${toggle.dataset.toggleEditor}:${toggle.dataset.index}`;
@@ -503,19 +535,24 @@ function bind() {
   bindDrag();
 }
 
-applyTheme();
-fillForms();
-renderEditors();
-bind();
-
-ZH_SITE.fetchContent()
-  .then((content) => {
-    data = content;
+async function initializeAdmin() {
+  try {
+    const response = await fetch("/api/auth/me", { cache: "no-store" });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    currentUser = result.user;
+    $$('[data-owner-only]').forEach((node) => { node.hidden = currentUser.role !== "owner"; });
     applyTheme();
     fillForms();
     renderEditors();
-  })
-  .catch((error) => {
-    console.error("Failed to refresh site content:", error);
-    showState("读取数据库失败，当前显示默认内容");
-  });
+    bind();
+    data = await ZH_SITE.fetchContent();
+    applyTheme();
+    fillForms();
+    renderEditors();
+  } catch (error) {
+    window.location.replace("login.html");
+  }
+}
+
+initializeAdmin();

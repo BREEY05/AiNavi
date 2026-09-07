@@ -9,6 +9,8 @@
 - `members.html`：社团风采
 - `projects.html`：项目展示
 - `activities.html`：近期活动
+- `announcements.html`：最新公告
+- `login.html`：管理员登录与注册入口
 - `join.html`：加入我们
 - `admin.html`：内部管理后台
 
@@ -16,21 +18,28 @@
 
 - `styles.css`：前台公共样式
 - `admin.css`：后台样式
-- `site-data.js`：默认内容、登录码、本地存储工具
-- `main.js`：前台渲染、隐藏入口、详情弹窗
+- `site-data.js`：默认内容与前台数据工具
+- `main.js`：前台渲染、详情弹窗、Canvas 分布图
+- `auth.js` / `auth.css`：管理员登录注册页
 - `admin.js`：后台编辑、上传、保存、排序
 - `assets/`：默认 Logo 与参考图资源
 
-## 隐藏入口
+## 管理员认证
 
-右上角只有 Logo 图标，没有文字。连续点击 Logo 3 次后，会弹出内部验证码输入框。
+右上角 Logo 仅保留视觉样式，不再触发登录。管理员从 `login.html` 进入，使用 QQ 号、用户自定义密码和邮箱验证码完成登录。
 
-验证流程：
+新账号默认处于“待审批”状态；使用 `ADMIN_QQ` 注册的账号会成为所有者，并可在后台“账号管理”中批准、待定或禁用其他账号。
+
+验证码邮件默认使用控制台模式，正式发送 QQ 邮件前复制 `.env.example` 为 `.env`，填写 QQ 邮箱 SMTP 授权码：
 
 ```text
-内部验证码：heyiwei
-第二重登录码：qnmd
+ADMIN_QQ=380154843
+MAIL_MODE=smtp
+QQ_MAIL_USER=380154843@qq.com
+QQ_MAIL_AUTH_CODE=QQ邮箱SMTP授权码
 ```
+
+邮件验证码有效期为 10 分钟，同一 QQ 号每 60 秒最多发送一次，同一 IP 每小时最多发送 5 次。
 
 ## 后台可配置
 
@@ -42,8 +51,8 @@
 - 近期活动图片、标题、时间、地点、详情，支持新增、删除、拖拽排序
 - 加入我们页面联系信息、招新信息、说明文案
 
-当前静态版本会把修改保存在当前浏览器的 `localStorage` 中。正式公网多人维护时，建议后续接后端数据库或 JSON 文件接口。
+内容和管理员账号均保存于 SQLite；`data/` 与 `.env` 不应提交到代码仓库。
 
 ## 上线部署
 
-上传本目录下所有 `.html`、`.css`、`.js` 文件以及 `assets/` 文件夹到服务器网站根目录即可。
+需要 Node.js 20 或更高版本。安装依赖后运行 `npm start`，并同时部署 `server.js`、所有页面资源、`package.json`、`package-lock.json` 与 `assets/`。

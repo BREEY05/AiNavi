@@ -1,39 +1,10 @@
 ﻿let siteContent = ZH_SITE.load();
-let loginStep = "primary";
-let secretClicks = 0;
-let secretTimer = null;
 let achievementPage = 0;
 let chartsArmed = false;
 let chartsAnimated = false;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-
-function ensureSharedModals() {
-  if (!$("[data-login-modal]")) {
-    document.body.insertAdjacentHTML("beforeend", `
-      <div class="login-modal" data-login-modal hidden>
-        <form class="login-card" data-login-form>
-          <button class="close-button" type="button" data-close-login aria-label="关闭">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-          </button>
-          <h2>内部登录</h2>
-          <p data-login-hint>请输入内部验证码进入内容管理。</p>
-          <div data-login-step="primary">
-            <label for="login-code-primary">内部验证码</label>
-            <input id="login-code-primary" type="password" autocomplete="current-password" placeholder="请输入内部验证码">
-          </div>
-          <div data-login-step="secondary" hidden>
-            <label for="login-code-secondary">第二重登录码</label>
-            <input id="login-code-secondary" type="password" autocomplete="current-password" placeholder="请输入第二重登录码">
-          </div>
-          <button class="primary-button" type="submit" data-login-submit>进入后台</button>
-          <span class="form-message" data-login-message></span>
-        </form>
-      </div>
-    `);
-  }
-}
 
 function applyTheme() {
   document.documentElement.style.setProperty("--blue", siteContent.themeColor || "#1768ff");
@@ -204,19 +175,71 @@ function renderAboutCharts() {
   const root = $("[data-about-charts]");
   if (!root) return;
   const charts = (siteContent.about && siteContent.about.charts) || [];
-  root.innerHTML = charts.map((chart) => {
+  root.innerHTML = charts.map((chart, index) => {
     const items = chart.items || [];
     return `
       <article class="chart-card">
         <h3>${ZH_SITE.escapeHtml(chart.title)}</h3>
         <div class="pie-scene">
-          <div class="pie-base"></div>
-          <div class="pie-chart" style="--pie:${pieSegments(items)}"></div>
+          <canvas class="pie-canvas" data-pie-index="${index}" aria-label="${ZH_SITE.escapeHtml(chart.title)}"></canvas>
           ${chartLabels(items)}
         </div>
       </article>
     `;
   }).join("");
+  $$(".pie-canvas").forEach((canvas, index) => drawPieChart(canvas, charts[index].items || [], 1));
+}
+
+function shadeColor(color, amount) {
+  const value = String(color || "#86aefb").replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(value)) return "#6c91d8";
+  const rgb = [0, 2, 4].map((offset) => Math.max(0, Math.min(255, parseInt(value.slice(offset, offset + 2), 16) + amount)));
+  return `rgb(${rgb.join(",")})`;
+}
+
+function drawPieChart(canvas, items, progress) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.max(1, Math.round(rect.width * dpr));
+  const height = Math.max(1, Math.round(rect.height * dpr));
+  if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+  const context = canvas.getContext("2d");
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  context.clearRect(0, 0, rect.width, rect.height);
+  const values = items.map((item) => Math.max(0, Number(item.value) || 0));
+  const total = values.reduce((sum, value) => sum + value, 0) || 1;
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2 - 2;
+  const radiusX = Math.min(rect.width * .31, 128);
+  const radiusY = radiusX * .48;
+  context.save();
+  context.shadowColor = "rgba(27, 64, 112, .20)";
+  context.shadowBlur = 12;
+  context.shadowOffsetY = 7;
+  context.beginPath(); context.ellipse(centerX, centerY + 3, radiusX * 1.02, radiusY * .98, 0, 0, Math.PI * 2); context.fillStyle = "rgba(50, 75, 115, .10)"; context.fill();
+  context.restore();
+  let start = -Math.PI / 2;
+  const slices = values.map((value, index) => { const end = start + Math.PI * 2 * (value / total) * progress; const slice = { start, end, color: items[index].color || chartColor(index) }; start = end; return slice; });
+  slices.forEach((slice) => {
+    context.beginPath();
+    context.moveTo(centerX, centerY);
+    context.ellipse(centerX, centerY, radiusX, radiusY, 0, slice.start, slice.end);
+    context.closePath();
+    context.fillStyle = slice.color;
+    context.fill();
+  });
+}
+
+function animatePieChart(canvas, items) {
+  const startedAt = performance.now();
+  const duration = 720;
+  const frame = (timestamp) => {
+    const elapsed = Math.min(1, (timestamp - startedAt) / duration);
+    const eased = 1 - Math.pow(1 - elapsed, 3);
+    drawPieChart(canvas, items, Math.max(.04, eased));
+    if (elapsed < 1) requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
 }
 
 function armAboutChartWheel() {
@@ -234,7 +257,8 @@ function armAboutChartWheel() {
 function animateAboutCharts() {
   if (!document.body.matches("[data-page='about']") || !chartsArmed || chartsAnimated) return;
   chartsAnimated = true;
-  $$(".pie-chart").forEach((chart) => chart.classList.add("animate"));
+  const charts = (siteContent.about && siteContent.about.charts) || [];
+  $$(".pie-canvas").forEach((canvas, index) => animatePieChart(canvas, charts[index].items || []));
 }
 
 function renderMembers() {
@@ -391,54 +415,7 @@ function closeDetail() {
   if ($("[data-detail-modal]")) $("[data-detail-modal]").hidden = true;
 }
 
-function openLogin() {
-  resetLoginFlow();
-  $("[data-login-modal]").hidden = false;
-  $("#login-code-primary").focus();
-}
-
-function closeLogin() {
-  $("[data-login-modal]").hidden = true;
-  resetLoginFlow();
-}
-
-function resetLoginFlow() {
-  loginStep = "primary";
-  $("[data-login-step='primary']").hidden = false;
-  $("[data-login-step='secondary']").hidden = true;
-  $("[data-login-hint]").textContent = "请输入内部验证码进入内容管理。";
-  $("[data-login-submit]").textContent = "进入后台";
-  $("[data-login-message]").textContent = "";
-  $("#login-code-primary").value = "";
-  $("#login-code-secondary").value = "";
-}
-
-function showSecondaryLogin() {
-  loginStep = "secondary";
-  $("[data-login-step='primary']").hidden = true;
-  $("[data-login-step='secondary']").hidden = false;
-  $("[data-login-hint]").textContent = "请继续完成第二重验证。";
-  $("[data-login-submit]").textContent = "进入后台";
-  $("[data-login-message]").textContent = "";
-  $("#login-code-secondary").focus();
-}
-
 function bindEvents() {
-  const secretEntry = $("[data-secret-login]");
-  if (secretEntry) {
-    secretEntry.addEventListener("click", () => {
-      secretClicks += 1;
-      window.clearTimeout(secretTimer);
-      secretTimer = window.setTimeout(() => { secretClicks = 0; }, 900);
-      if (secretClicks >= 3) {
-        secretClicks = 0;
-        openLogin();
-      }
-    });
-  }
-
-  const closeLoginButton = $("[data-close-login]");
-  if (closeLoginButton) closeLoginButton.addEventListener("click", closeLogin);
   const menuButton = $("[data-menu-toggle]");
   if (menuButton) menuButton.addEventListener("click", () => $(".main-nav").classList.toggle("open"));
   const closeDetailButton = $("[data-close-detail]");
@@ -465,29 +442,6 @@ function bindEvents() {
       if (event.target.matches("[data-detail-modal]")) closeDetail();
     });
   }
-  $("[data-login-modal]").addEventListener("click", (event) => {
-    if (event.target.matches("[data-login-modal]")) closeLogin();
-  });
-
-  $("[data-login-form]").addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (loginStep === "primary") {
-      if ($("#login-code-primary").value.trim() !== ZH_SITE.LOGIN_CODE_PRIMARY) {
-        $("[data-login-message]").textContent = "内部验证码不正确，请重新输入。";
-        return;
-      }
-      showSecondaryLogin();
-      return;
-    }
-
-    if ($("#login-code-secondary").value.trim() !== ZH_SITE.LOGIN_CODE_SECONDARY) {
-      $("[data-login-message]").textContent = "第二重登录码不正确，请重新输入。";
-      return;
-    }
-    sessionStorage.setItem("zhihang-admin-auth", "1");
-    window.location.href = "admin.html";
-  });
-
   document.addEventListener("click", (event) => {
     const detailButton = event.target.closest("[data-open-detail]");
     if (detailButton) {
@@ -517,7 +471,6 @@ function renderAll() {
   renderJoin();
 }
 
-ensureSharedModals();
 renderAll();
 bindEvents();
 

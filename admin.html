@@ -30,6 +30,7 @@
       <button type="button" data-section="projects">项目展示</button>
       <button type="button" data-section="activities">近期活动</button>
       <button type="button" data-section="join">加入我们</button>
+      <button type="button" data-section="accounts" data-owner-only hidden>账号管理</button>
     </aside>
 
     <section class="admin-workspace">
@@ -133,6 +134,11 @@
         </div>
         <button class="primary-button" type="submit">保存加入我们</button>
       </form>
+
+      <section class="manager-section" data-panel="accounts">
+        <p class="admin-tip">批准后可进入后台；禁用会立即阻止该账号继续访问后台。所有者账号不能在此修改。</p>
+        <div class="account-list" data-account-list></div>
+      </section>
 
       <div class="admin-bottom-actions">
         <button class="ghost-button" type="button" data-export>导出当前内容JSON</button>

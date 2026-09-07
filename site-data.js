@@ -1,7 +1,5 @@
 ﻿const ZH_SITE = (() => {
   const STORAGE_KEY = "zhihang-ai-content-v3";
-  const LOGIN_CODE_PRIMARY = "heyiwei";
-  const LOGIN_CODE_SECONDARY = "qnmd";
 
   function svgData(markup) {
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(markup)}`;
@@ -230,5 +228,5 @@
     return icons[name] || icons.book;
   }
 
-  return { LOGIN_CODE_PRIMARY, LOGIN_CODE_SECONDARY, defaults, load, fetchContent, save, reset, uploadImage, fileToDataUrl, escapeHtml, icon, placeholder };
+  return { defaults, load, fetchContent, save, reset, uploadImage, fileToDataUrl, escapeHtml, icon, placeholder };
 })();

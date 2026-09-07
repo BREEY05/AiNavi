@@ -251,6 +251,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   height: 3.2rem;
   padding: 0.35rem;
   background: rgba(234, 243, 255, 0.72);
+  pointer-events: none;
 }
 
 .secret-logo-button .brand-logo {
@@ -826,44 +827,20 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 
 .pie-scene {
   position: relative;
-  width: min(31rem, 88vw);
+  width: 100%;
   height: 22rem;
   overflow: visible;
   contain: layout;
 }
 
-.pie-base,
-.pie-chart {
+.pie-canvas {
   position: absolute;
   left: 50%;
   top: 50%;
   width: 16rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  transform: translate(-50%, -47%) rotateX(58deg);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-.pie-base {
-  top: calc(50% + 1.2rem);
-  background: conic-gradient(var(--pie));
-  filter: saturate(0.75) brightness(0.82);
-  box-shadow: 0 1.2rem 2.4rem rgba(37, 63, 103, 0.18);
-}
-
-.pie-chart {
-  background: conic-gradient(var(--pie));
-  box-shadow:
-    inset 0 0.45rem 1.2rem rgba(255, 255, 255, 0.34),
-    0 0.75rem 1.4rem rgba(37, 63, 103, 0.12);
-  opacity: 0;
-  transform: translate(-50%, -47%) rotateX(58deg) scale(0.94);
-  will-change: transform, opacity;
-}
-
-.pie-chart.animate {
-  animation: pie-pop 0.75s cubic-bezier(0.22, 0.8, 0.24, 1) forwards;
+  height: 13rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .chart-label {
@@ -872,7 +849,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   display: inline-flex;
   align-items: center;
   gap: 0.38rem;
-  max-width: 8.8rem;
+  max-width: 8rem;
   color: #52617c;
   font-size: 0.9rem;
   line-height: 1.25;
@@ -881,7 +858,7 @@ body[data-page="join"] .secret-logo-button .brand-logo {
 }
 
 .chart-label.left {
-  transform: translate(-100%, -50%);
+  transform: translate(0, -50%);
 }
 
 .chart-label.right {
@@ -901,25 +878,6 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   height: 0;
   border-top: 1px dashed rgba(100, 112, 138, 0.54);
   transform-origin: left center;
-}
-
-@keyframes pie-pop {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -47%) rotateX(58deg) scale(0.88);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -47%) rotateX(58deg) scale(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pie-chart.animate {
-    animation: none;
-    opacity: 1;
-    transform: translate(-50%, -47%) rotateX(58deg);
-  }
 }
 
 .club-style-section {
