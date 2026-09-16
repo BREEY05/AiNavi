@@ -1,5 +1,9 @@
 ﻿let siteContent = ZH_SITE.load();
 let achievementPage = 0;
+let achievementAutoplayId;
+let achievementAutoplayPaused = false;
+let achievementTransitioning = false;
+let achievementTransitionId;
 let chartsArmed = false;
 let chartsAnimated = false;
 
@@ -90,27 +94,71 @@ function renderHome() {
   renderAchievements();
 }
 
-function renderAchievements() {
+function achievementCards(achievements) {
+  const visibleCount = Math.min(3, achievements.length);
+  return Array.from({ length: visibleCount }, (_, offset) => {
+    const index = (achievementPage + offset) % achievements.length;
+    const item = achievements[index];
+    return `
+      <button class="achievement-item" type="button" data-open-achievement="${index}">
+        <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
+        <figcaption>
+          <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
+          <span>${ZH_SITE.escapeHtml(item.note || "成果展示")}</span>
+        </figcaption>
+      </button>
+    `;
+  }).join("");
+}
+
+function renderAchievements(direction = 0) {
   if (!document.body.matches("[data-page='home']")) return;
   const achievements = siteContent.achievements || [];
-  const pageSize = 3;
-  const maxPage = Math.max(0, Math.ceil(achievements.length / pageSize) - 1);
-  achievementPage = Math.min(achievementPage, maxPage);
-  const visible = achievements.slice(achievementPage * pageSize, achievementPage * pageSize + pageSize);
+  const root = $("[data-list='home-projects']");
+  achievementPage = achievements.length ? Math.min(achievementPage, achievements.length - 1) : 0;
+  const cards = achievementCards(achievements);
+  const previousGrid = $(".achievement-grid", root);
 
-  $("[data-list='home-projects']").innerHTML = visible.map((item, index) => `
-    <button class="achievement-item" type="button" data-open-achievement="${achievementPage * pageSize + index}">
-      <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
-      <figcaption>
-        <strong>${ZH_SITE.escapeHtml(item.title)}</strong>
-        <span>${ZH_SITE.escapeHtml(item.note || "成果展示")}</span>
-      </figcaption>
-    </button>
-  `).join("");
+  if (direction && previousGrid) {
+    achievementTransitioning = true;
+    clearTimeout(achievementTransitionId);
+    root.style.height = `${root.getBoundingClientRect().height}px`;
+    root.classList.add("is-transitioning", direction > 0 ? "move-forward" : "move-backward");
+    root.innerHTML = `
+      <div class="achievement-grid achievement-grid-outgoing">${previousGrid.innerHTML}</div>
+      <div class="achievement-grid achievement-grid-incoming">${cards}</div>
+    `;
+    achievementTransitionId = window.setTimeout(() => {
+      root.classList.remove("is-transitioning", "move-forward", "move-backward");
+      root.style.height = "";
+      root.innerHTML = `<div class="achievement-grid">${cards}</div>`;
+      achievementTransitioning = false;
+    }, 460);
+  } else {
+    root.innerHTML = `<div class="achievement-grid">${cards}</div>`;
+  }
 
   $$(`[data-achievement-prev], [data-achievement-next]`).forEach((button) => {
-    button.hidden = achievements.length <= pageSize;
+    button.hidden = achievements.length <= 1;
   });
+  syncAchievementAutoplay();
+}
+
+function changeAchievementPage(step) {
+  const count = (siteContent.achievements || []).length;
+  if (count <= 1 || achievementTransitioning) return;
+  achievementPage = (achievementPage + step + count) % count;
+  renderAchievements(step);
+}
+
+function syncAchievementAutoplay() {
+  clearInterval(achievementAutoplayId);
+  const count = (siteContent.achievements || []).length;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!document.body.matches("[data-page='home']") || document.hidden || count <= 1 || achievementAutoplayPaused || prefersReducedMotion) return;
+  achievementAutoplayId = window.setInterval(() => {
+    if (!document.hidden) changeAchievementPage(1);
+  }, 5000);
 }
 
 function renderAbout() {
@@ -145,7 +193,7 @@ function pieSegments(items) {
 function chartLabels(items) {
   const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.value) || 0), 0) || 1;
   let start = 0;
-  return items.map((item, index) => {
+  const labels = items.map((item, index) => {
     const value = Math.max(0, Number(item.value) || 0);
     const percent = value / total * 100;
     const mid = (start + percent / 2) / 100 * 360 - 90;
@@ -157,13 +205,31 @@ function chartLabels(items) {
     const labelY = 50 + Math.sin(rad) * 36;
     const lineX = 50 + Math.cos(rad) * 26;
     const lineY = 50 + Math.sin(rad) * 22;
-    const width = Math.max(11, Math.abs(labelX - lineX));
-    const angle = Math.atan2(labelY - lineY, labelX - lineX) * 180 / Math.PI;
-    const clampedX = Math.min(88, Math.max(12, labelX));
-    const clampedY = Math.min(84, Math.max(16, labelY));
+    return {
+      item, index, percent, side, lineX, lineY,
+      x: Math.min(88, Math.max(12, labelX)),
+      y: Math.min(84, Math.max(16, labelY))
+    };
+  });
 
+  ["left", "right"].forEach((side) => {
+    const sideLabels = labels.filter((label) => label.side === side).sort((a, b) => a.y - b.y);
+    const minimumGap = 13;
+    sideLabels.forEach((label, index) => {
+      if (index) label.y = Math.max(label.y, sideLabels[index - 1].y + minimumGap);
+    });
+    for (let index = sideLabels.length - 1; index >= 0; index -= 1) {
+      const next = sideLabels[index + 1];
+      if (next) sideLabels[index].y = Math.min(sideLabels[index].y, next.y - minimumGap);
+    }
+    sideLabels.forEach((label) => { label.y = Math.min(84, Math.max(16, label.y)); });
+  });
+
+  return labels.map(({ item, index, percent, side, lineX, lineY, x, y }) => {
+    const width = Math.max(11, Math.abs(x - lineX));
+    const angle = Math.atan2(y - lineY, x - lineX) * 180 / Math.PI;
     return `
-      <span class="chart-label ${side}" style="left:${clampedX}%; top:${clampedY}%;">
+      <span class="chart-label ${side}" style="left:${x}%; top:${y}%;">
         <i style="background:${item.color || chartColor(index)}"></i>${ZH_SITE.escapeHtml(item.label)} ${Math.round(percent)}%
       </span>
       <span class="chart-line" style="left:${lineX}%; top:${lineY}%; width:${width}%; transform:rotate(${angle}deg);"></span>
@@ -422,18 +488,25 @@ function bindEvents() {
   if (closeDetailButton) closeDetailButton.addEventListener("click", closeDetail);
   const achievementPrev = $("[data-achievement-prev]");
   if (achievementPrev) achievementPrev.addEventListener("click", () => {
-    const count = (siteContent.achievements || []).length;
-    const maxPage = Math.max(0, Math.ceil(count / 3) - 1);
-    achievementPage = achievementPage <= 0 ? maxPage : achievementPage - 1;
-    renderAchievements();
+    changeAchievementPage(-1);
   });
   const achievementNext = $("[data-achievement-next]");
   if (achievementNext) achievementNext.addEventListener("click", () => {
-    const count = (siteContent.achievements || []).length;
-    const maxPage = Math.max(0, Math.ceil(count / 3) - 1);
-    achievementPage = achievementPage >= maxPage ? 0 : achievementPage + 1;
-    renderAchievements();
+    changeAchievementPage(1);
   });
+  const achievementSection = $(".achievement-section");
+  if (achievementSection) {
+    achievementSection.addEventListener("mouseenter", () => { achievementAutoplayPaused = true; syncAchievementAutoplay(); });
+    achievementSection.addEventListener("mouseleave", () => { achievementAutoplayPaused = false; syncAchievementAutoplay(); });
+    achievementSection.addEventListener("focusin", () => { achievementAutoplayPaused = true; syncAchievementAutoplay(); });
+    achievementSection.addEventListener("focusout", (event) => {
+      if (!achievementSection.contains(event.relatedTarget)) {
+        achievementAutoplayPaused = false;
+        syncAchievementAutoplay();
+      }
+    });
+  }
+  document.addEventListener("visibilitychange", syncAchievementAutoplay);
   window.addEventListener("wheel", animateAboutCharts, { passive: true });
   armAboutChartWheel();
   const detailModal = $("[data-detail-modal]");

@@ -650,6 +650,40 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   gap: 1.25rem;
 }
 
+.achievement-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-carousel.is-transitioning .achievement-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+}
+
+.achievement-carousel.move-forward .achievement-grid-outgoing { animation: achievement-slide-out-left 440ms ease both; }
+.achievement-carousel.move-forward .achievement-grid-incoming { animation: achievement-slide-in-right 440ms ease both; }
+.achievement-carousel.move-backward .achievement-grid-outgoing { animation: achievement-slide-out-right 440ms ease both; }
+.achievement-carousel.move-backward .achievement-grid-incoming { animation: achievement-slide-in-left 440ms ease both; }
+
+@keyframes achievement-slide-out-left {
+  to { opacity: 0; transform: translateX(-12%); }
+}
+
+@keyframes achievement-slide-in-right {
+  from { opacity: 0; transform: translateX(12%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes achievement-slide-out-right {
+  to { opacity: 0; transform: translateX(12%); }
+}
+
+@keyframes achievement-slide-in-left {
+  from { opacity: 0; transform: translateX(-12%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 .achievement-controls {
   display: inline-flex;
   gap: 0.45rem;
@@ -679,6 +713,12 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   font-weight: 500;
   color: inherit;
   background: transparent;
+  animation: achievement-enter 420ms ease both;
+}
+
+@keyframes achievement-enter {
+  from { opacity: 0; transform: translateX(0.8rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .achievement-item img {
@@ -714,6 +754,11 @@ body[data-page="join"] .secret-logo-button .brand-logo {
   color: var(--blue);
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-item,
+  .achievement-carousel.is-transitioning .achievement-grid { animation: none; }
 }
 
 .sub-page {
