@@ -147,21 +147,15 @@ app.post("/api/auth/register/verify", (request, response) => {
   markCodeUsed.run(now(), record.id);
   response.json({ message: isOwner ? "所有者账号已创建，可以登录。" : "注册成功，等待管理员审批后即可登录。", status: isOwner ? "approved" : "pending" });
 });
-app.post("/api/auth/login/request-code", async (request, response) => {
+app.post("/api/auth/login", (request, response) => {
   const { qq, password } = request.body || {};
-  const user = validQq(qq) && findUser.get(String(qq));
-  if (!user || !verifySecret(String(password || ""), user.password_hash)) return response.status(401).json({ error: "QQ 号或密码不正确。" });
+  if (!validQq(qq)) return response.status(400).json({ error: "请输入 5 到 12 位 QQ 号。" });
+  const user = findUser.get(String(qq));
+  if (!user) return response.status(404).json({ error: "该 QQ 号未注册，请先注册管理员账号。" });
+  if (!verifySecret(String(password || ""), user.password_hash)) return response.status(401).json({ error: "密码不正确。" });
   if (user.status !== "approved") return response.status(403).json({ error: user.status === "pending" ? "账号正在等待审批。" : "该账号暂未获得后台访问权限。" });
-  await issueCode(request, response, "login", {});
-});
-app.post("/api/auth/login/verify", (request, response) => {
-  const { qq, code } = request.body || {};
-  const user = validQq(qq) && findUser.get(String(qq));
-  const record = user && latestCode.get(String(qq), "login");
-  if (!user || user.status !== "approved" || !record || record.used_at || new Date(record.expires_at).getTime() < Date.now() || !verifySecret(String(code || ""), record.code_hash)) return response.status(401).json({ error: "验证码无效或已过期。" });
   const token = crypto.randomBytes(32).toString("base64url");
   createSession.run(token, user.qq, new Date(Date.now() + SESSION_TTL_MS).toISOString(), now());
-  markCodeUsed.run(now(), record.id);
   response.cookie("zhihang_session", token, { httpOnly: true, sameSite: "lax", secure: request.secure, maxAge: SESSION_TTL_MS, path: "/" });
   response.json({ user: publicUser(user) });
 });

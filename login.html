@@ -16,9 +16,7 @@
       <form data-auth-form="login" class="auth-form">
         <label>QQ号<input name="qq" inputmode="numeric" autocomplete="username" maxlength="12" required></label>
         <label>密码<input name="password" type="password" autocomplete="current-password" minlength="8" required></label>
-        <label class="code-field" hidden>邮箱验证码<input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label>
-        <button class="primary-button" type="submit">发送登录验证码</button>
-        <button class="auth-resend ghost-button" type="button" data-resend-code hidden>重新发送验证码</button>
+        <button class="primary-button" type="submit">登录后台</button>
       </form>
       <form data-auth-form="register" class="auth-form" hidden>
         <label>QQ号<input name="qq" inputmode="numeric" autocomplete="username" maxlength="12" required></label>
@@ -29,7 +27,7 @@
       </form>
       <p class="auth-message" data-auth-message aria-live="polite"></p>
     </section>
-    <p class="auth-note">验证码将发送至 QQ号@qq.com，每次发送间隔至少 60 秒。</p>
+    <p class="auth-note">注册验证码将发送至 QQ号@qq.com，每次发送间隔至少 60 秒。</p>
   </main>
   <script src="site-data.js"></script>
   <script src="auth.js"></script>
