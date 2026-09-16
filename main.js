@@ -94,11 +94,10 @@ function renderHome() {
   renderAchievements();
 }
 
-function achievementCards(achievements) {
-  const visibleCount = Math.min(3, achievements.length);
-  return Array.from({ length: visibleCount }, (_, offset) => {
-    const index = (achievementPage + offset) % achievements.length;
-    const item = achievements[index];
+function achievementCards(achievements, pageSize = 3) {
+  const start = achievementPage * pageSize;
+  return achievements.slice(start, start + pageSize).map((item, offset) => {
+    const index = start + offset;
     return `
       <button class="achievement-item" type="button" data-open-achievement="${index}">
         <img src="${item.image}" alt="${ZH_SITE.escapeHtml(item.title)}">
@@ -111,25 +110,27 @@ function achievementCards(achievements) {
   }).join("");
 }
 
-function renderAchievements(direction = 0) {
+function renderAchievements(animate = false) {
   if (!document.body.matches("[data-page='home']")) return;
   const achievements = siteContent.achievements || [];
+  const pageSize = 3;
+  const maxPage = Math.max(0, Math.ceil(achievements.length / pageSize) - 1);
   const root = $("[data-list='home-projects']");
-  achievementPage = achievements.length ? Math.min(achievementPage, achievements.length - 1) : 0;
-  const cards = achievementCards(achievements);
+  achievementPage = Math.min(achievementPage, maxPage);
+  const cards = achievementCards(achievements, pageSize);
   const previousGrid = $(".achievement-grid", root);
 
-  if (direction && previousGrid) {
+  if (animate && previousGrid) {
     achievementTransitioning = true;
     clearTimeout(achievementTransitionId);
     root.style.height = `${root.getBoundingClientRect().height}px`;
-    root.classList.add("is-transitioning", direction > 0 ? "move-forward" : "move-backward");
+    root.classList.add("is-transitioning");
     root.innerHTML = `
       <div class="achievement-grid achievement-grid-outgoing">${previousGrid.innerHTML}</div>
       <div class="achievement-grid achievement-grid-incoming">${cards}</div>
     `;
     achievementTransitionId = window.setTimeout(() => {
-      root.classList.remove("is-transitioning", "move-forward", "move-backward");
+      root.classList.remove("is-transitioning");
       root.style.height = "";
       root.innerHTML = `<div class="achievement-grid">${cards}</div>`;
       achievementTransitioning = false;
@@ -139,26 +140,27 @@ function renderAchievements(direction = 0) {
   }
 
   $$(`[data-achievement-prev], [data-achievement-next]`).forEach((button) => {
-    button.hidden = achievements.length <= 1;
+    button.hidden = achievements.length <= pageSize;
   });
   syncAchievementAutoplay();
 }
 
 function changeAchievementPage(step) {
   const count = (siteContent.achievements || []).length;
-  if (count <= 1 || achievementTransitioning) return;
-  achievementPage = (achievementPage + step + count) % count;
-  renderAchievements(step);
+  const maxPage = Math.max(0, Math.ceil(count / 3) - 1);
+  if (!maxPage || achievementTransitioning) return;
+  achievementPage = (achievementPage + step + maxPage + 1) % (maxPage + 1);
+  renderAchievements(true);
 }
 
 function syncAchievementAutoplay() {
   clearInterval(achievementAutoplayId);
   const count = (siteContent.achievements || []).length;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!document.body.matches("[data-page='home']") || document.hidden || count <= 1 || achievementAutoplayPaused || prefersReducedMotion) return;
+  if (!document.body.matches("[data-page='home']") || document.hidden || count <= 3 || achievementAutoplayPaused || prefersReducedMotion) return;
   achievementAutoplayId = window.setInterval(() => {
     if (!document.hidden) changeAchievementPage(1);
-  }, 5000);
+  }, 1500);
 }
 
 function renderAbout() {
@@ -444,6 +446,8 @@ function openDetail(type, index) {
     ${isActivity ? "" : (item.link ? `<p><a href="${ZH_SITE.escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:700;">查看相关链接 →</a></p>` : "")}
   `;
   $("[data-detail-modal]").hidden = false;
+  achievementAutoplayPaused = true;
+  syncAchievementAutoplay();
 }
 
 function openAchievement(index) {
@@ -456,6 +460,8 @@ function openAchievement(index) {
     <p>${ZH_SITE.escapeHtml(item.note || "暂无说明。")}</p>
   `;
   $("[data-detail-modal]").hidden = false;
+  achievementAutoplayPaused = true;
+  syncAchievementAutoplay();
 }
 
 function openList(type) {
@@ -479,6 +485,8 @@ function openList(type) {
 
 function closeDetail() {
   if ($("[data-detail-modal]")) $("[data-detail-modal]").hidden = true;
+  achievementAutoplayPaused = false;
+  syncAchievementAutoplay();
 }
 
 function bindEvents() {
@@ -489,23 +497,13 @@ function bindEvents() {
   const achievementPrev = $("[data-achievement-prev]");
   if (achievementPrev) achievementPrev.addEventListener("click", () => {
     changeAchievementPage(-1);
+    syncAchievementAutoplay();
   });
   const achievementNext = $("[data-achievement-next]");
   if (achievementNext) achievementNext.addEventListener("click", () => {
     changeAchievementPage(1);
+    syncAchievementAutoplay();
   });
-  const achievementSection = $(".achievement-section");
-  if (achievementSection) {
-    achievementSection.addEventListener("mouseenter", () => { achievementAutoplayPaused = true; syncAchievementAutoplay(); });
-    achievementSection.addEventListener("mouseleave", () => { achievementAutoplayPaused = false; syncAchievementAutoplay(); });
-    achievementSection.addEventListener("focusin", () => { achievementAutoplayPaused = true; syncAchievementAutoplay(); });
-    achievementSection.addEventListener("focusout", (event) => {
-      if (!achievementSection.contains(event.relatedTarget)) {
-        achievementAutoplayPaused = false;
-        syncAchievementAutoplay();
-      }
-    });
-  }
   document.addEventListener("visibilitychange", syncAchievementAutoplay);
   window.addEventListener("wheel", animateAboutCharts, { passive: true });
   armAboutChartWheel();
