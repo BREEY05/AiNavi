@@ -1,0 +1,15 @@
+body[data-content-state="loading"] #main,
+body[data-content-state="error"] #main { visibility: hidden; }
+#content-status { position: fixed; inset: 40% 20px auto; z-index: 100; text-align: center; background: #fafcfd; padding: 24px; border: 1px solid #abc4c8; }
+#content-status[hidden] { display: none; }
+.archive-visual > img { width: 100%; height: 100%; object-fit: contain; }
+.archive-visual.generated-image > img { opacity: .055; filter: grayscale(1); }
+.secret-logo-button img { width: 32px; height: 32px; object-fit: contain; }
+[data-logo-slot="unified"] img { width: 100%; height: 100%; object-fit: contain; }
+#join-identity img { width: 96px; height: 96px; object-fit: contain; }
+[data-join-recruit-info], .archive-dialog p { white-space: pre-line; }
+.empty-content { padding: 28px; }
+.hub-panel .notice-list, .hub-panel .activity-list { max-height: 48svh; overflow-y: auto; }
+.archive-info h3, .dial-name, .member-name, .contact-node a { overflow-wrap: anywhere; }
+button.original-link { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+body[data-content-state="error"] .chapter-nav { visibility: hidden; }

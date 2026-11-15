@@ -1,0 +1,42 @@
+.main-nav a[href="about.html"] .nav-name, .target-reticle { position: relative; }
+.main-nav a[href="about.html"] .nav-name::before, .target-reticle::before { content: ""; position: absolute; inset: -5px -6px; pointer-events: none; background: linear-gradient(#3152D7,#3152D7) left top/9px 1.5px no-repeat,linear-gradient(#3152D7,#3152D7) left top/1.5px 7px no-repeat,linear-gradient(#3152D7,#3152D7) right top/9px 1.5px no-repeat,linear-gradient(#3152D7,#3152D7) right top/1.5px 7px no-repeat,linear-gradient(#3152D7,#3152D7) left bottom/9px 1.5px no-repeat,linear-gradient(#3152D7,#3152D7) left bottom/1.5px 7px no-repeat,linear-gradient(#3152D7,#3152D7) right bottom/9px 1.5px no-repeat,linear-gradient(#3152D7,#3152D7) right bottom/1.5px 7px no-repeat,linear-gradient(#3152D7,#3152D7) center top/1px 3px no-repeat,linear-gradient(#3152D7,#3152D7) center bottom/1px 3px no-repeat; background-color: rgba(49,82,215,.045); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+.main-nav a[href="about.html"]:hover .nav-name::before, .main-nav a[href="about.html"]:focus-visible .nav-name::before, .target-reticle:hover::before { transform: scale(.94); }
+.main-nav a[href="about.html"] .nav-name::after, .target-reticle::after { content: "LOCK // 02"; position: absolute; right: -5px; top: -17px; font: 8px var(--font-mono-tech); color: #3152D7; opacity: 0; transition: opacity .2s; }
+.main-nav a[href="about.html"]:hover .nav-name::after, .main-nav a[href="about.html"]:focus-visible .nav-name::after, .target-reticle:hover::after { opacity: 1; }
+.recruit-portal { position: absolute; bottom: 10%; right: 7%; width: 54%; min-height: 52px; text-align: center; display: grid; place-items: center; }
+.recruit-portal::before, .recruit-portal::after { content: ""; position: absolute; width: 52%; height: 70px; bottom: -14px; border: 1px solid #3152D7; border-top: 0; border-radius: 0 0 50% 50%; opacity: .6; }
+.recruit-portal::after { width: 47%; bottom: -19px; opacity: .3; }
+.recruit-portal span { position: relative; z-index: 1; background: #18222C; color: #FAFCFD; padding: 12px 22px; font-size: 14px; letter-spacing: .07em; border-inline: 5px double #ABC4C8; }
+.recruit-portal small { font: 10px var(--font-mono-tech); margin-left: 10px; color: #ABC4C8; }
+.dial-controls { position: absolute; left: 15%; bottom: 17%; display: flex; align-items: center; gap: 20px; }
+.dial-controls button { border: 1px solid #ABC4C8; background: #FAFCFD; min-width: 34px; min-height: 34px; color: #3152D7; }
+.dial-controls span { font: 11px var(--font-mono-tech); }
+.dial-controls button:disabled { opacity: .3; }
+.project-blueprint { display: grid; place-items: center; height: 24vh; border-bottom: 1px solid #ABC4C8; background: repeating-linear-gradient(0deg, transparent 0 23px, #ABC4C833 23px 24px), repeating-linear-gradient(90deg, transparent 0 23px, #ABC4C833 23px 24px); }
+.project-blueprint svg { width: 16vmin; height: 16vmin; }
+.project-blueprint span { font: 11px var(--font-mono-tech); }
+.project-description { line-height: 1.8; font-size: clamp(14px, 1vw, 19px); max-width: 44em; }
+.project-award { color: #3152D7; font-size: 14px; border-left: 2px solid; padding-left: 14px; }
+.recruit-portal b { position: relative; z-index: 1; padding: 4px 14px; background: #ECEFEA; font-size: 16px; }
+.stage-four .dial-help { bottom: 3%; }
+.stage-four .archive-visual { max-height: 39vh; }
+.archive-project-detail { font-size: 13px; line-height: 1.7; margin: 12px 0; max-width: 90%; }
+@media (max-width: 900px) { .recruit-portal { position: relative; bottom: auto; right: auto; width: 100%; margin: 35px 0 20px; } .recruit-portal span { font-size: 13px; padding: 13px; } .recruit-portal small { display: block; margin: 8px 0 0; } .dial-controls { position: relative; left: auto; bottom: auto; justify-content: center; margin: 0 0 25px; } .stage-four .archive-visual { max-height: none; } }
+/* Keep backdrop, grid and grain in the root snapshot to preserve their compositing. */
+.site-header { view-transition-name: navigation-hud; }
+@view-transition { navigation: auto; }
+::view-transition { pointer-events: none; background: #ECEFEA; }
+::view-transition-group(*) { animation-duration: 460ms; animation-timing-function: cubic-bezier(.2,.75,.2,1); }
+::view-transition-old(root) { animation: pageDepart 460ms cubic-bezier(.2,.75,.2,1) both; }
+::view-transition-new(root) { animation: pageArrive 460ms cubic-bezier(.2,.75,.2,1) both; }
+::view-transition-group(navigation-hud) { z-index: 2; }
+::view-transition-old(navigation-hud) { display: none; }
+::view-transition-new(navigation-hud) { animation: none; }
+:root:active-view-transition-type(backward) { --route-direction: -1; }
+@keyframes pageDepart { to { opacity: 0; transform: translateY(calc(-12px * var(--route-direction,1))); } }
+/* Keep the incoming snapshot rasterized while its first paint is prepared. */
+@keyframes pageArrive { from { opacity: .001; transform: translateY(calc(20px * var(--route-direction,1))); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation-duration: 0s; }
+}
