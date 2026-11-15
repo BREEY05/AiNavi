@@ -1,0 +1,20 @@
+:root { --blue: #3152D7; --text: #263441; }
+body, body.auth-body { background: radial-gradient(ellipse at 14% 72%, rgba(171,196,200,.65), transparent 53%), radial-gradient(ellipse at 85% 7%, #E4DFD7, transparent 50%), #ECEFEA; color: #263441; }
+.site-shell { background: transparent; }
+.site-header { background: rgba(244,247,246,.72); border: 1px solid #ABC4C8; border-radius: 0; box-shadow: none; backdrop-filter: blur(20px); }
+.main-nav a, .secret-logo-button { border-radius: 0; }
+.main-nav a.active { background: transparent; color: #3152D7; border-bottom: 2px solid #3152D7; }
+.blue-rings { opacity: .12; }
+.page-hero, .join-hero, .about-intro, .club-style-section, .panel, .auth-panel, .join-info, .project-card, .activity-feed-item, .stat-card, .member-card, .moment-card, .admin-panel { position: relative; border: 1px solid #ABC4C8 !important; border-radius: 0 !important; background: #FAFCFD !important; box-shadow: none !important; }
+.page-hero, .join-hero, .club-style-section, .auth-panel, .join-info { padding-top: 46px; }
+.page-hero::before, .join-hero::before, .club-style-section::before, .auth-panel::before, .join-info::before { content: "// ASSOCIATION ARCHIVE 01"; position: absolute; top: 13px; left: 20px; font: 10px/1.5 Consolas, monospace; letter-spacing: .1em; color: #5C6E7E; }
+.club-style-section + .club-style-section::before, .join-info + .join-info::before { content: "// ASSOCIATION ARCHIVE 02"; }
+.page-hero h1, .auth-heading h1, .join-hero h1 { font-family: "Noto Serif SC", SimSun, serif; font-weight: 600; }
+button, input, textarea, .primary-button, .ghost-button { border-radius: 0 !important; }
+.site-footer { border-top: 1px solid #ABC4C8; background: transparent; }
+.join-visual { background: #ECEFEA; border: 1px solid #ABC4C8; border-radius: 0; box-shadow: none; }
+body { counter-reset: archive-module; }
+.activity-feed-item, .project-card, .member-card, .moment-card { counter-increment: archive-module; padding: 38px 22px 20px !important; }
+.activity-feed-item::before, .project-card::before, .member-card::before, .moment-card::before { content: "// ASSOCIATION ARCHIVE " counter(archive-module, decimal-leading-zero); position: absolute; top: 12px; left: 22px; font: 9px Consolas, monospace; letter-spacing: .08em; color: #5C6E7E; }
+.activity-feed-item img, .project-card img, .member-card img, .moment-card img { border-radius: 0 !important; }
+@media (max-width: 700px) { .page-hero::before, .join-hero::before, .club-style-section::before, .auth-panel::before, .join-info::before { font-size: 9px; } }
